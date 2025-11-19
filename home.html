@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Name | Home</title>
+  <meta name="description" content="Personal website of Your Name. Projects, blog, and ways to get in touch.">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-alt: #111827;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.1);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --card: #020617;
+      --border: #1f2937;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .logo {
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo span {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    nav a {
+      color: var(--muted);
+      padding-bottom: 0.15rem;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .nav-cta {
+      font-size: 0.85rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      color: #0b1120;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.25);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(56, 189, 248, 0.3);
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 1.25rem 2.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.1rem, 3vw + 1.2rem, 3rem);
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 34rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.3rem;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      font-size: 0.9rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #020617;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      background: #0ea5e9;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .hero-meta strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top left, #1f2937, #020617);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.4rem;
+      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.85);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.18);
+      color: #a5f3fc;
+      margin-bottom: 0.7rem;
+    }
+
+    .hero-card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-pill {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.7);
+      color: #e5e7eb;
+    }
+
+    .hero-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .hero-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.24);
+    }
+
+    .section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1.25rem 3rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--bg-alt);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.1rem 1.1rem 1rem;
+      transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.8);
+    }
+
+    .card h3 {
+      font-size: 0.98rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .card small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+    }
+
+    .card-tag {
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      color: #d1d5db;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #020617;
+    }
+
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding-top: 2.4rem;
+      }
+
+      header {
+        position: static;
+      }
+
+      .nav-wrap {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      nav ul {
+        gap: 0.9rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav-wrap">
+    <a href="#top" class="logo">
+      <span>YN</span>
+      <span>• Portfolio</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="nav-cta">Let’s connect</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <p class="hero-kicker">Welcome</p>
+      <h1 id="hero-title">Your Name, <span>something you do</span></h1>
+      <p class="hero-subtitle">
+        One line about who you are and what you’re great at.
+        Mention your role, your stack, or what visitors can find here.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View projects</a>
+        <a href="#contact" class="btn-ghost">Contact</a>
+      </div>
+
+      <div class="hero-meta">
+        <span><strong>Location:</strong> City · Country</span>
+        <span><strong>Focus:</strong> e.g. Web development, AI, music</span>
+      </div>
+    </div>
+
+    <aside class="hero-card" aria-label="Quick profile">
+      <div class="hero-card-tag">
+        <span>●</span> Open to collaboration
+      </div>
+      <h2>Quick snapshot</h2>
+      <p>
+        Short 1–2 sentence summary of what you’re working on or
+        what visitors should check out first.
+      </p>
+      <div class="hero-pill-list">
+        <span class="hero-pill">Skill / Tech 1</span>
+        <span class="hero-pill">Skill / Tech 2</span>
+        <span class="hero-pill">Skill / Tech 3</span>
+      </div>
+      <div class="hero-card-footer">
+        <div class="hero-status">
+          <span class="status-dot"></span>
+          <span>Currently accepting new projects</span>
+        </div>
+        <a href="#contact" style="color: var(--accent);">Say hi →</a>
+      </div>
+    </aside>
+  </section>
+
+  <section id="work" class="section" aria-labelledby="work-title">
+    <div class="section-header">
+      <div>
+        <p class="section-title">Projects</p>
+        <p class="section-subtitle">
+          A few things recently built or shipped.
+        </p>
+      </div>
+      <a href="#contact" class="btn-ghost">Request full portfolio</a>
+    </div>
+
+    <div class="cards">
+      <article class="card">
+        <h3>Project One</h3>
+        <small>Short label · 2025</small>
+        <p>
+          One or two short sentences about what this project is and why it matters.
+        </p>
+        <div class="card-tags">
+          <span class="card-tag">Tech / Tool</span>
+          <span class="card-tag">Role</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Project Two</h3>
+        <small>Short label · 2025</small>
+        <p>
+          Highlight measurable outcomes if you can: performance, users, or impact.
+        </p>
+        <div class="card-tags">
+          <span class="card-tag">Tech / Tool</span>
+          <span class="card-tag">Role</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Project Three</h3>
+        <small>Short label · 2024</small>
+        <p>
+          Optionally link to code or a live demo using an anchor inside this card.
+        </p>
+        <div class="card-tags">
+          <span class="card-tag">Tech / Tool</span>
+          <span class="card-tag">Role</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-title">
+    <div class="section-header">
+      <div>
+        <p class="section-title">About</p>
+        <p class="section-subtitle">
+          Who you are beyond the bullet points.
+        </p>
+      </div>
+    </div>
+    <div style="max-width: 46rem; font-size: 0.9rem; color: var(--muted); line-height: 1.6;">
+      <p>
+        Replace this with a short narrative about your background, what you enjoy working on,
+        and what kinds of problems you like to solve.
+      </p>
+      <br>
+      <p>
+        You can mention your current role, key achievements, or interests like open source,
+        teaching, or side projects.
+      </p>
+    </div>
+  </section>
+
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <div class="section-header">
+      <div>
+        <p class="section-title">Contact</p>
+        <p class="section-subtitle">
+          Fastest ways to get in touch.
+        </p>
+      </div>
+    </div>
+    <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+      <div style="flex:1 1 260px; font-size:0.9rem; color:var(--muted); line-height:1.6;">
+        <p>
+          Want to collaborate, ask a question, or just say hello?
+          Reach out using any of the links here.
+        </p>
+        <br>
+        <ul style="list-style:none; padding-left:0; display:flex; flex-direction:column; gap:0.4rem;">
+          <li><strong>Email:</strong> <a href="mailto:you@example.com">you@example.com</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/your-username" target="_blank" rel="noreferrer">github.com/your-username</a></li>
+          <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noreferrer">linkedin.com/in/your-handle</a></li>
+        </ul>
+      </div>
+      <form style="flex:1 1 260px; display:flex; flex-direction:column; gap:0.6rem;">
+        <label>
+          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Name</span>
+          <input type="text" name="name" placeholder="Your name"
+                 style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem;">
+        </label>
+        <label>
+          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Email</span>
+          <input type="email" name="email" placeholder="you@example.com"
+                 style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem;">
+        </label>
+        <label>
+          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Message</span>
+          <textarea name="message" rows="4" placeholder="What would you like to chat about?"
+                    style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem; resize:vertical;"></textarea>
+        </label>
+        <!-- Replace `#` with your form handler endpoint if you add one -->
+        <button type="submit" class="btn-primary" style="margin-top:0.3rem; align-self:flex-start; border:none;">
+          Send message
+        </button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© <span id="year"></span> Your Name. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#top">Back to top</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/imprint.html">Imprint</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Auto-set current year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
