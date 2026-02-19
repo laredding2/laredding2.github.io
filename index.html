@@ -1,599 +1,1030 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Leo Redding's Home Page</title>
-  <link rel="icon" type="image/x-icon" href="favicon.jpg">
-  <meta name="description" content="My website I use to show my projects, interests, and anything else that fits.">
-  <style>
-    :root {
-      --bg: #0f172a;
-      --bg-alt: #111827;
-      --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.1);
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --card: #020617;
-      --border: #1f2937;
-      --radius: 10px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leo Redding | Cybersecurity Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyber-green: #00ff41;
+            --cyber-green-dim: #00cc33;
+            --cyber-blue: #0ff;
+            --cyber-pink: #ff0080;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --card-bg: rgba(10, 15, 20, 0.85);
+            --text-primary: #e0e0e0;
+            --text-secondary: #808080;
+            --grid-color: rgba(0, 255, 65, 0.03);
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
 
-    header {
-      border-bottom: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+        /* Animated Grid Background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: gridMove 20s linear infinite;
+        }
 
-    .nav-wrap {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0.9rem 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
 
-    .logo {
-      font-weight: 650;
-      letter-spacing: 0.04em;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
+        /* Scan line effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            opacity: 0.3;
+        }
 
-    .logo span {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+        /* Glowing orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+        }
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.9rem;
-    }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--cyber-green);
+            top: -100px;
+            right: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
 
-    nav a {
-      color: var(--muted);
-      padding-bottom: 0.15rem;
-      border-bottom: 1px solid transparent;
-      transition: color 0.15s ease, border-color 0.15s ease;
-    }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--cyber-blue);
+            bottom: 20%;
+            left: -100px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
 
-    nav a:hover {
-      color: var(--text);
-      border-color: var(--accent);
-    }
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--cyber-pink);
+            bottom: -50px;
+            right: 20%;
+            animation: float 12s ease-in-out infinite;
+        }
 
-    .nav-cta {
-      font-size: 0.85rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), #22c55e);
-      color: #0b1120;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.25);
-    }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
 
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(56, 189, 248, 0.3);
-    }
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(180deg, var(--darker-bg) 0%, transparent 100%);
+        }
 
-    main {
-      flex: 1;
-    }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--cyber-green);
+            text-shadow: 0 0 20px var(--cyber-green);
+            letter-spacing: 3px;
+        }
 
-    .hero {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 3.5rem 1.25rem 2.5rem;
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 2.5rem;
-      align-items: center;
-    }
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
 
-    .hero-kicker {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
+        .nav-links a {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-    .hero h1 {
-      font-size: clamp(2.1rem, 3vw + 1.2rem, 3rem);
-      line-height: 1.1;
-      margin-bottom: 0.75rem;
-    }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--cyber-green);
+            box-shadow: 0 0 10px var(--cyber-green);
+            transition: width 0.3s ease;
+        }
 
-    .hero h1 span {
-      color: var(--accent);
-    }
+        .nav-links a:hover {
+            color: var(--cyber-green);
+            text-shadow: 0 0 10px var(--cyber-green);
+        }
 
-    .hero-subtitle {
-      color: var(--muted);
-      font-size: 0.98rem;
-      max-width: 34rem;
-      margin-bottom: 1.4rem;
-    }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1.3rem;
-    }
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
 
-    .btn-primary,
-    .btn-ghost {
-      font-size: 0.9rem;
-      padding: 0.55rem 1.1rem;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-    }
+        .terminal-window {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 40px rgba(0, 255, 65, 0.1),
+                inset 0 0 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 1s ease-out;
+        }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #020617;
-      font-weight: 600;
-    }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      background: #0ea5e9;
-    }
+        .terminal-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--border);
-    }
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
 
-    .btn-ghost:hover {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca40; }
 
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
+        .terminal-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .hero-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
+        .terminal-body {
+            padding: 2rem;
+            font-family: 'Share Tech Mono', monospace;
+            text-align: left;
+        }
 
-    .hero-meta strong {
-      color: var(--text);
-      font-weight: 500;
-    }
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: typeLine 0.5s ease forwards;
+        }
 
-    .hero-card {
-      background: radial-gradient(circle at top left, #1f2937, #020617);
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      padding: 1.5rem 1.4rem;
-      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.85);
-      position: relative;
-      overflow: hidden;
-    }
+        .terminal-line:nth-child(1) { animation-delay: 0.5s; }
+        .terminal-line:nth-child(2) { animation-delay: 1s; }
+        .terminal-line:nth-child(3) { animation-delay: 1.5s; }
+        .terminal-line:nth-child(4) { animation-delay: 2s; }
+        .terminal-line:nth-child(5) { animation-delay: 2.5s; }
 
-    .hero-card-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.75rem;
-      padding: 0.25rem 0.55rem;
-      border-radius: 999px;
-      background: rgba(15, 118, 110, 0.18);
-      color: #a5f3fc;
-      margin-bottom: 0.7rem;
-    }
+        @keyframes typeLine {
+            to { opacity: 1; }
+        }
 
-    .hero-card h2 {
-      font-size: 1.15rem;
-      margin-bottom: 0.4rem;
-    }
+        .prompt {
+            color: var(--cyber-green);
+        }
 
-    .hero-card p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 0.9rem;
-    }
+        .command {
+            color: var(--cyber-blue);
+        }
 
-    .hero-pill-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 1.1rem;
-    }
+        .output {
+            color: var(--text-primary);
+            padding-left: 1rem;
+        }
 
-    .hero-pill {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.7);
-      color: #e5e7eb;
-    }
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-top: 2rem;
+            background: linear-gradient(135deg, var(--cyber-green), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            animation: glitch 5s infinite;
+        }
 
-    .hero-card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+        @keyframes glitch {
+            0%, 90%, 100% { 
+                transform: translate(0); 
+                filter: none;
+            }
+            91% { 
+                transform: translate(-2px, 1px); 
+                filter: hue-rotate(90deg);
+            }
+            92% { 
+                transform: translate(2px, -1px); 
+                filter: hue-rotate(-90deg);
+            }
+            93% { 
+                transform: translate(0); 
+                filter: none;
+            }
+        }
 
-    .hero-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
+        .hero-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.24);
-    }
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-    .section {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 1.25rem 3rem;
-    }
+        .btn {
+            font-family: 'Share Tech Mono', monospace;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
 
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      gap: 1rem;
-    }
+        .btn-primary {
+            background: var(--cyber-green);
+            color: var(--dark-bg);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
 
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--cyber-green);
+            transform: translateY(-3px);
+        }
 
-    .section-subtitle {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
+        .btn-secondary {
+            background: transparent;
+            color: var(--cyber-blue);
+            border: 2px solid var(--cyber-blue);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 1.25rem;
-    }
+        .btn-secondary:hover {
+            background: var(--cyber-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 30px var(--cyber-blue);
+            transform: translateY(-3px);
+        }
 
-    .card {
-      background: var(--bg-alt);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      padding: 1.1rem 1.1rem 1rem;
-      transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-    }
+        /* Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-    .card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(56, 189, 248, 0.6);
-      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.8);
-    }
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
 
-    .card h3 {
-      font-size: 0.98rem;
-      margin-bottom: 0.25rem;
-    }
+        .section-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cyber-pink);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 1rem;
+        }
 
-    .card small {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-    .card p {
-      font-size: 0.83rem;
-      color: var(--muted);
-      margin-bottom: 0.7rem;
-    }
+        .section-title span {
+            color: var(--cyber-green);
+        }
 
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      font-size: 0.7rem;
-    }
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
 
-    .card-tag {
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      color: #d1d5db;
-    }
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.4s ease;
+        }
 
-    footer {
-      border-top: 1px solid var(--border);
-      background: #020617;
-    }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyber-green), var(--cyber-blue), var(--cyber-pink));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
 
-    .footer-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 1rem 1.25rem 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 255, 65, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 255, 65, 0.15);
+        }
 
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-    }
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
 
-    .footer-links a {
-      color: var(--muted);
-    }
+        .project-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-    .footer-links a:hover {
-      color: var(--accent);
-    }
+        .project-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 255, 255, 0.1));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
 
-    @media (max-width: 720px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-        padding-top: 2.4rem;
-      }
+        .project-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
 
-      header {
-        position: static;
-      }
+        .project-lang {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cyber-blue);
+            background: rgba(0, 255, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 3px;
+            margin-left: auto;
+        }
 
-      .nav-wrap {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+        .project-body {
+            padding: 1.5rem;
+        }
 
-      nav ul {
-        gap: 0.9rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
 
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-  </style>
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cyber-green);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-link {
+            font-family: 'Share Tech Mono', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--cyber-green);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--cyber-blue);
+            gap: 1rem;
+        }
+
+        .project-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-text strong {
+            color: var(--cyber-green);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .skill-item {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: rgba(0, 255, 65, 0.4);
+            transform: translateX(5px);
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+        }
+
+        .skill-name {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        /* Stats Section */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+            padding: 3rem 2rem;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.05), transparent);
+            border-top: 1px solid rgba(0, 255, 65, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--cyber-green);
+            text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(0, 255, 65, 0.1);
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--cyber-green);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyber-green);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--cyber-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        .social-link svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Scroll reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
-<header>
-  <div class="nav-wrap">
-    <a href="#top" class="logo">
-      <span>HOME</span>
-    </a>
-    <nav aria-label="Primary navigation">
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#work">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-    <a href="#contact" class="nav-cta">Let’s connect</a>
-  </div>
-</header>
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-<main id="top">
-  <section class="hero" aria-labelledby="hero-title">
-    <div>
-      <p class="hero-kicker">Welcome</p>
-      <h1 id="hero-title">Leo Redding, <span>student by day, gamer and developer at night.</span></h1>
-      </p>
-
-      <div class="hero-actions">
-        <a href="#work" class="btn-primary">View projects</a>
-        <a href="#contact" class="btn-ghost">Contact</a>
-      </div>
-
-      <div class="hero-meta">
-        <span><strong>Location:</strong>[Private]</span>
-        <span><strong>Focus:</strong>AI, script development, and gaming.</span>
-      </div>
-    </div>
-
-    <aside class="hero-card" aria-label="Quick profile">
-      <div class="hero-card-tag">
-        <span>●</span> Open to collaboration
-      </div>
-      <h2>Quick snapshot</h2>
-      <p>
-        I'm currently working on little Python scripts for ideas that randomly come across to me.
-      </p>
-      <div class="hero-card-footer">
-        <div class="hero-status">
-          <span class="status-dot"></span>
-          <span>Currently accepting new projects</span>
-        </div>
-        <a href="#contact" style="color: var(--accent);">Say hi →</a>
-      </div>
-    </aside>
-  </section>
-
-  <section id="work" class="section" aria-labelledby="work-title">
-    <div class="section-header">
-      <div>
-        <p class="section-title">Projects</p>
-        <p class="section-subtitle">
-          A few things recently built or shipped.
-        </p>
-      </div>
-    </div>
-
-    <div class="cards">
-      <article class="card">
-        <a href="https://github.com/laredding2/Subnet-Calculator">Subnet Calculator</a>
-        <small>11/19/2025</small>
-        <p>
-          A tool you can use to calculate the IP addresses of a given network, with subnets included.
-        </p>
-        <div class="card-tags">
-          <span class="card-tag">Tool</span>
-        </div>
-      </article>
-
-      <article class="card">
-        <a href="https://github.com/laredding2/Troll-Password-Generator">Trolling Password Generator</a>
-        <small>11/18/2025</small>
-        <p>
-          Perfect tool to use for your IT friends who want a password, but it screws with them so much. Actually has an ending, eventually.
-        </p>
-        <div class="card-tags">
-          <span class="card-tag">Tool</span>
-        </div>
-      </article>
-
-      <article class="card">
-        <a href="https://github.com/laredding2/Network-Ping-Scanner">Ping Network Scanner</a>
-        <small>11/18/2025</small>
-        <p>
-          A Python GUI tool you can use to ping your entire network, as well as perform DNS lookups to see who's on your network.
-        </p>
-        <div class="card-tags">
-          <span class="card-tag">Tool</span>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section id="about" class="section" aria-labelledby="about-title">
-    <div class="section-header">
-      <div>
-        <p class="section-title">About</p>
-        </p>
-      </div>
-    </div>
-    <div style="max-width: 46rem; font-size: 0.9rem; color: var(--muted); line-height: 1.6;">
-      <p>
-        I'm a student, and developer (mostly Python, but sometimes HTML, C#, and Java.)
-      </p>
-      <br>
-      <p>
-        Some interests of mine I'd want to get done in the future are some scripts for Minecraft Java, and anything else I find interesting.
-      </p>
-    </div>
-  </section>
-
-  <section id="contact" class="section" aria-labelledby="contact-title">
-    <div class="section-header">
-      <div>
-        <p class="section-title">Contact</p>
-        </p>
-      </div>
-    </div>
-    <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
-      <div style="flex:1 1 260px; font-size:0.9rem; color:var(--muted); line-height:1.6;">
-        <p>
-          Want to collaborate, ask a question, or just say hello?
-          Reach out to me using any of the links here.
-        </p>
-        <br>
-        <ul style="list-style:none; padding-left:0; display:flex; flex-direction:column; gap:0.4rem;">
-          <li><strong>Email:</strong> <a href="mailto:g31373449@gmail.com">g31373449@gmail.com</a></li>
-          <li><strong>GitHub:</strong> <a href="https://github.com/laredding2" target="_blank" rel="noreferrer">https://github.com/laredding2</a></li>
+    <nav>
+        <div class="logo">&lt;LR/&gt;</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="https://github.com/laredding2" target="_blank">GitHub</a></li>
         </ul>
-      </div>
-      <form style="flex:1 1 260px; display:flex; flex-direction:column; gap:0.6rem;">
-        <label>
-          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Name</span>
-          <input type="text" name="name" placeholder="Your name"
-                 style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem;">
-        </label>
-        <label>
-          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Email</span>
-          <input type="email" name="email" placeholder="you@example.com"
-                 style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem;">
-        </label>
-        <label>
-          <span style="display:block; font-size:0.8rem; margin-bottom:0.2rem;">Message</span>
-          <textarea name="message" rows="4" placeholder="What would you like to chat about?"
-                    style="width:100%; padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:#020617; color:var(--text); font-size:0.85rem; resize:vertical;"></textarea>
-        </label>
-        <!-- Replace `#` with your form handler endpoint if you add one -->
-        <button type="submit" class="btn-primary" style="margin-top:0.3rem; align-self:flex-start; border:none;">
-          Send message
-        </button>
-      </form>
-    </div>
-  </section>
-</main>
+    </nav>
 
-<footer>
-  <div class="footer-inner">
-    <span>© <span id="year"></span>All rights reserved.</span>
-    <div class="footer-links">
-      <a href="#top">Back to top</a>
-    </div>
-  </div>
-</footer>
+    <section class="hero">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="terminal-dot dot-red"></span>
+                <span class="terminal-dot dot-yellow"></span>
+                <span class="terminal-dot dot-green"></span>
+                <span class="terminal-title">leo@cybersec:~</span>
+            </div>
+            <div class="terminal-body">
+                <div class="terminal-line"><span class="prompt">$</span> <span class="command">whoami</span></div>
+                <div class="terminal-line"><span class="output">Leo Redding</span></div>
+                <div class="terminal-line"><span class="prompt">$</span> <span class="command">cat interests.txt</span></div>
+                <div class="terminal-line"><span class="output">Cybersecurity | Network Analysis | Python Development</span></div>
+                <div class="terminal-line"><span class="prompt">$</span> <span class="command">./start_portfolio<span style="animation: blink 1s infinite;">_</span></span></div>
+            </div>
+        </div>
+        <h1 class="hero-title">Leo Redding</h1>
+        <p class="hero-subtitle">Cybersecurity Enthusiast</p>
+        <div class="cta-buttons">
+            <a href="https://github.com/laredding2" target="_blank" class="btn btn-primary">View GitHub</a>
+            <a href="#projects" class="btn btn-secondary">Explore Projects</a>
+        </div>
+    </section>
 
-<script>
-  // Auto-set current year in footer
-  document.getElementById('year').textContent = new Date().getFullYear();
-</script>
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-number">23</div>
+            <div class="stat-label">Repositories</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">Languages</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Curiosity</div>
+        </div>
+    </div>
+
+    <section id="about">
+        <div class="section-header">
+            <span class="section-tag">//&nbsp;Introduction</span>
+            <h2 class="section-title">About <span>Me</span></h2>
+        </div>
+        <div class="about-content reveal">
+            <div class="about-text">
+                <p>
+                    I'm <strong>Leo Redding</strong>, a cybersecurity enthusiast with a passion for network security, 
+                    automation, and building tools that make security analysis more accessible.
+                </p>
+                <p>
+                    My projects focus on practical applications in <strong>network scanning</strong>, 
+                    <strong>subnet calculation</strong>, and <strong>protocol visualization</strong>. I believe in 
+                    learning by building, and I share my work openly on GitHub to help others on their security journey.
+                </p>
+                <p>
+                    When I'm not coding, you'll find me exploring new security concepts, tinkering with shell scripts, 
+                    or enjoying some good pizza 😋
+                </p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <span class="skill-icon">🐍</span>
+                    <span class="skill-name">Python</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🖥️</span>
+                    <span class="skill-name">Shell Scripting</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🌐</span>
+                    <span class="skill-name">HTML/CSS</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">🔒</span>
+                    <span class="skill-name">Network Security</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">📡</span>
+                    <span class="skill-name">Protocol Analysis</span>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-icon">⚙️</span>
+                    <span class="skill-name">Automation</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="section-header">
+            <span class="section-tag">//&nbsp;Featured Work</span>
+            <h2 class="section-title">My <span>Projects</span></h2>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">🔍</div>
+                    <div class="project-title">Network-Ping-Scanner</div>
+                    <span class="project-lang">Python</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        A comprehensive network reconnaissance tool that scans a given network range, identifies 
+                        alive and dead hosts, and performs DNS lookups on all responsive hosts. Essential for 
+                        network mapping and security assessments.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Network Scanning</span>
+                        <span class="tag">DNS Lookup</span>
+                        <span class="tag">Host Discovery</span>
+                    </div>
+                    <a href="https://github.com/laredding2/Network-Ping-Scanner" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">🧮</div>
+                    <div class="project-title">Subnet-Calculator</div>
+                    <span class="project-lang">Python</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        A clean, efficient subnet calculator for network engineers and security professionals. 
+                        Calculate network addresses, broadcast addresses, usable hosts, and more from any 
+                        IP/CIDR combination.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Subnetting</span>
+                        <span class="tag">IP Addressing</span>
+                        <span class="tag">CIDR</span>
+                    </div>
+                    <a href="https://github.com/laredding2/Subnet-Calculator" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">📡</div>
+                    <div class="project-title">DHCP-HTML-Visualization</div>
+                    <span class="project-lang">HTML</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        An interactive 3D visualization that demonstrates how DHCP (Dynamic Host Configuration 
+                        Protocol) works. Perfect for learning and teaching network fundamentals through visual 
+                        representation.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">DHCP</span>
+                        <span class="tag">3D Visualization</span>
+                        <span class="tag">Educational</span>
+                    </div>
+                    <a href="https://github.com/laredding2/DHCP-HTML-Visualization" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">🔐</div>
+                    <div class="project-title">Troll-Password-Generator</div>
+                    <span class="project-lang">Python</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        A humorous CLI tool that trolls users into creating increasingly complex passwords. 
+                        While comedic in nature, it highlights the often frustrating reality of password 
+                        requirements in security policies.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">CLI Tool</span>
+                        <span class="tag">Password Security</span>
+                        <span class="tag">Humor</span>
+                    </div>
+                    <a href="https://github.com/laredding2/Troll-Password-Generator" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">❓</div>
+                    <div class="project-title">AreYouSure-Game</div>
+                    <span class="project-lang">Shell</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        A creative Shell script that challenges users with endless "Are you sure?" prompts in 
+                        various forms. Features a surprise ending! (Epilepsy warning applies.) A fun exploration 
+                        of shell scripting capabilities.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Shell Script</span>
+                        <span class="tag">Interactive</span>
+                        <span class="tag">Creative</span>
+                    </div>
+                    <a href="https://github.com/laredding2/AreYouSure-Game" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="project-card reveal">
+                <div class="project-header">
+                    <div class="project-icon">🌍</div>
+                    <div class="project-title">laredding2.github.io</div>
+                    <span class="project-lang">HTML</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        My personal GitHub Pages site serving as a central hub for my online presence and 
+                        portfolio. Built with web technologies to showcase projects and provide easy navigation 
+                        to my work.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Portfolio</span>
+                        <span class="tag">GitHub Pages</span>
+                        <span class="tag">Web</span>
+                    </div>
+                    <a href="https://github.com/laredding2/laredding2.github.io" target="_blank" class="project-link">
+                        View Repository
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">&lt;Leo Redding/&gt;</div>
+        <p class="footer-text">Building security tools, one commit at a time.</p>
+        <div class="social-links">
+            <a href="https://github.com/laredding2" target="_blank" class="social-link" title="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+            </a>
+            <a href="http://laredding2.github.io" target="_blank" class="social-link" title="Website">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+
+    <script>
+        // Scroll reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
