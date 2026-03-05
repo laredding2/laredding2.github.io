@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minesweeper</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #1a1a2e;
+    --cell-hidden: #16213e;
+    --cell-border: #0f3460;
+    --cell-reveal: #e2e2e2;
+    --cell-mine:   #e94560;
+    --mine-bg:     #c0392b;
+    --flag-color:  #f5a623;
+    --header-bg:   #0f3460;
+    --btn-bg:      #e94560;
+    --btn-fg:      #ffffff;
+    --text-dark:   #1a1a2e;
+    --text-light:  #e2e2e2;
+    --score-color: #00d4aa;
+    --cell-size:   36px;
+  }
+
+  body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+    font-family: 'Rajdhani', sans-serif;
+    user-select: none;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── Top bar ── */
+  #top-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  #diff-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 110px;
+  }
+
+  #diff-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 3px;
+  }
+
+  #difficulty {
+    background: var(--header-bg);
+    color: var(--text-light);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e2e2e2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  #difficulty option { background: var(--header-bg); }
+
+  #center-hud {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .hud-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 26px;
+    letter-spacing: 2px;
+  }
+
+  #mine-counter { color: var(--cell-mine); }
+  #timer-label  { color: var(--flag-color); }
+
+  #new-btn {
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    border: none;
+    border-radius: 5px;
+    padding: 7px 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  #new-btn:hover { background: #c0392b; }
+  #new-btn:active { transform: scale(0.97); }
+
+  /* ── Score row ── */
+  #score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 12px 6px;
+  }
+
+  #score-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 24px;
+    color: var(--score-color);
+    letter-spacing: 2px;
+  }
+
+  #hi-score-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    color: #555;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Board ── */
+  #board-wrap {
+    padding: 0 12px 12px;
+  }
+
+  #board {
+    display: grid;
+    gap: 0;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    border: 1px solid var(--cell-border);
+    background: var(--cell-hidden);
+    transition: background 0.08s, transform 0.08s;
+    position: relative;
+    box-shadow: inset 1px 1px 0 #1e3a5f;
+    cursor: pointer;
+  }
+
+  .cell:hover:not(.revealed):not(.flagged) {
+    background: #1e3a5f;
+    transform: scale(0.94);
+  }
+
+  .cell.revealed {
+    background: var(--cell-reveal);
+    border-color: #ccc;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .cell.flagged {
+    border: 2px solid var(--flag-color);
+    box-shadow: none;
+  }
+
+  .cell.mine-hit {
+    background: var(--mine-bg);
+    border-color: #e74c3c;
+  }
+
+  .cell.mine-revealed {
+    background: #c0392b;
+    border-color: #e74c3c;
+  }
+
+  /* digit colors */
+  .n1 { color: #2980b9; }
+  .n2 { color: #27ae60; }
+  .n3 { color: #e74c3c; }
+  .n4 { color: #8e44ad; }
+  .n5 { color: #c0392b; }
+  .n6 { color: #16a085; }
+  .n7 { color: #2c3e50; }
+  .n8 { color: #7f8c8d; }
+
+  /* ── Modal overlay ── */
+  #modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.75);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-overlay.show { display: flex; }
+
+  #modal {
+    background: var(--header-bg);
+    border: 2px solid var(--cell-border);
+    border-radius: 10px;
+    padding: 32px 40px;
+    text-align: center;
+    max-width: 320px;
+    animation: popIn 0.25s cubic-bezier(.175,.885,.32,1.275);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  #modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  #modal-body {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: #aaa;
+    line-height: 1.7;
+    margin-bottom: 22px;
+  }
+
+  #modal-close {
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    border: none;
+    border-radius: 5px;
+    padding: 9px 28px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #modal-close:hover { background: #c0392b; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top-bar">
+    <div id="diff-wrapper">
+      <div id="diff-label">DIFFICULTY</div>
+      <select id="difficulty">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+    </div>
+    <div id="center-hud">
+      <span id="mine-counter" class="hud-value">💣 010</span>
+      <button id="new-btn">⚑ NEW GAME</button>
+      <span id="timer-label" class="hud-value">⏱ 000</span>
+    </div>
+  </div>
+
+  <div id="score-row">
+    <span id="score-label">✦ SCORE  0</span>
+    <span id="hi-score-label"></span>
+  </div>
+
+  <div id="board-wrap">
+    <div id="board"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <div id="modal-title"></div>
+    <div id="modal-body"></div>
+    <button id="modal-close">OK</button>
+  </div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────────
+const DIFFICULTIES = {
+  Easy:   { rows: 9,  cols: 9,  mines: 10 },
+  Medium: { rows: 16, cols: 16, mines: 40 },
+  Hard:   { rows: 16, cols: 30, mines: 99 },
+};
+
+const DIGIT_COLORS = ['','n1','n2','n3','n4','n5','n6','n7','n8'];
+
+// ── State ──────────────────────────────────────────────────────────────────────
+let rows, cols, numMines;
+let board = [];          // board[r][c] = { mine, flagged, revealed, neighbors }
+let gameOver, gameWon, firstClick;
+let flagsUsed, revealedCount, score;
+let startTime = null, timerId = null;
+let highScores = loadHighScores();
+let currentDiff = 'Easy';
+
+// ── DOM refs ───────────────────────────────────────────────────────────────────
+const boardEl       = document.getElementById('board');
+const mineCounter   = document.getElementById('mine-counter');
+const timerLabel    = document.getElementById('timer-label');
+const scoreLabel    = document.getElementById('score-label');
+const hiScoreLabel  = document.getElementById('hi-score-label');
+const diffSelect    = document.getElementById('difficulty');
+const newBtn        = document.getElementById('new-btn');
+const modalOverlay  = document.getElementById('modal-overlay');
+const modalTitle    = document.getElementById('modal-title');
+const modalBody     = document.getElementById('modal-body');
+const modalClose    = document.getElementById('modal-close');
+
+// ── High score persistence ─────────────────────────────────────────────────────
+function loadHighScores() {
+  try { return JSON.parse(localStorage.getItem('minesweeper_scores') || '{}'); }
+  catch { return {}; }
+}
+function saveHighScores() {
+  try { localStorage.setItem('minesweeper_scores', JSON.stringify(highScores)); }
+  catch {}
+}
+
+// ── New game ───────────────────────────────────────────────────────────────────
+function newGame() {
+  const cfg = DIFFICULTIES[currentDiff];
+  rows = cfg.rows; cols = cfg.cols; numMines = cfg.mines;
+
+  gameOver = false; gameWon = false; firstClick = true;
+  flagsUsed = 0; revealedCount = 0; score = 0;
+  stopTimer(); startTime = null;
+
+  // Build board data
+  board = Array.from({length: rows}, () =>
+    Array.from({length: cols}, () =>
+      ({ mine: false, flagged: false, revealed: false, neighbors: 0 })));
+
+  // Size grid
+  boardEl.style.gridTemplateColumns = `repeat(${cols}, 36px)`;
+  boardEl.style.gridTemplateRows    = `repeat(${rows}, 36px)`;
+
+  // Build cells
+  boardEl.innerHTML = '';
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const el = document.createElement('div');
+      el.className = 'cell';
+      el.dataset.r = r; el.dataset.c = c;
+      el.addEventListener('click',       onLeftClick);
+      el.addEventListener('contextmenu', onRightClick);
+      el.addEventListener('dblclick',    onDoubleClick);
+      boardEl.appendChild(el);
+    }
+  }
+
+  updateMineCounter();
+  timerLabel.textContent = '⏱ 000';
+  updateScoreDisplay();
+}
+
+// ── Mine placement ─────────────────────────────────────────────────────────────
+function placeMines(safeR, safeC) {
+  const safe = new Set();
+  for (let dr = -1; dr <= 1; dr++)
+    for (let dc = -1; dc <= 1; dc++) {
+      const nr = safeR + dr, nc = safeC + dc;
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols)
+        safe.add(nr * cols + nc);
+    }
+
+  const candidates = [];
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (!safe.has(r * cols + c)) candidates.push([r, c]);
+
+  shuffle(candidates);
+  for (let i = 0; i < Math.min(numMines, candidates.length); i++)
+    board[candidates[i][0]][candidates[i][1]].mine = true;
+
+  // Count neighbors
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (!board[r][c].mine)
+        board[r][c].neighbors = neighbors(r, c).filter(([nr,nc]) => board[nr][nc].mine).length;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+// ── Neighbors ──────────────────────────────────────────────────────────────────
+function neighbors(r, c) {
+  const res = [];
+  for (let dr = -1; dr <= 1; dr++)
+    for (let dc = -1; dc <= 1; dc++) {
+      if (dr === 0 && dc === 0) continue;
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols)
+        res.push([nr, nc]);
+    }
+  return res;
+}
+
+// ── Reveal ─────────────────────────────────────────────────────────────────────
+function reveal(r, c) {
+  const cell = board[r][c];
+  if (cell.revealed || cell.flagged) return;
+  cell.revealed = true;
+  revealedCount++;
+  if (cell.neighbors > 0 && !cell.mine) {
+    score += cell.neighbors;
+    updateScoreDisplay();
+  }
+  drawCell(r, c);
+  if (cell.neighbors === 0 && !cell.mine)
+    neighbors(r, c).forEach(([nr, nc]) => reveal(nr, nc));
+}
+
+// ── Chord ──────────────────────────────────────────────────────────────────────
+function chord(r, c) {
+  const cell = board[r][c];
+  if (!cell.revealed || cell.neighbors === 0) return;
+  const flagCount = neighbors(r, c).filter(([nr,nc]) => board[nr][nc].flagged).length;
+  if (flagCount !== cell.neighbors) return;
+  neighbors(r, c).forEach(([nr, nc]) => {
+    const nb = board[nr][nc];
+    if (!nb.flagged && !nb.revealed) {
+      reveal(nr, nc);
+      if (nb.mine) triggerLoss(nr, nc);
+    }
+  });
+}
+
+// ── Win / Loss ─────────────────────────────────────────────────────────────────
+function checkWin() {
+  if (revealedCount === rows * cols - numMines) triggerWin();
+}
+
+function triggerLoss(br, bc) {
+  gameOver = true;
+  stopTimer();
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (board[r][c].mine) {
+        board[r][c].revealed = true;
+        drawCell(r, c, r === br && c === bc);
+      }
+  setTimeout(() => showModal('💥 Game Over', 'You hit a mine!\nClick "New Game" to try again.'), 300);
+}
+
+function triggerWin() {
+  gameWon = true;
+  stopTimer();
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c < cols; c++)
+      if (board[r][c].mine && !board[r][c].flagged) {
+        board[r][c].flagged = true;
+        flagsUsed++;
+        drawCell(r, c);
+      }
+  updateMineCounter();
+
+  const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+  const prev = highScores[currentDiff] || 0;
+  const isRecord = score > prev;
+  if (isRecord) { highScores[currentDiff] = score; saveHighScores(); updateScoreDisplay(); }
+
+  let msg = `Board cleared in ${elapsed}s!\nScore: ${score}`;
+  msg += isRecord ? `\n🏆 New High Score for ${currentDiff}!` : `\nHigh Score (${currentDiff}): ${prev}`;
+  setTimeout(() => showModal('🎉 You Won!', msg), 200);
+}
+
+// ── Event handlers ─────────────────────────────────────────────────────────────
+function rcFromTarget(el) {
+  if (!el.dataset.r) return [null, null];
+  return [+el.dataset.r, +el.dataset.c];
+}
+
+function onLeftClick(e) {
+  if (gameOver || gameWon) return;
+  const [r, c] = rcFromTarget(e.currentTarget);
+  if (r === null) return;
+  const cell = board[r][c];
+  if (cell.flagged || cell.revealed) return;
+  if (firstClick) {
+    firstClick = false;
+    placeMines(r, c);
+    startTimer();
+  }
+  reveal(r, c);
+  if (cell.mine) triggerLoss(r, c);
+  else checkWin();
+}
+
+function onRightClick(e) {
+  e.preventDefault();
+  if (gameOver || gameWon) return;
+  const [r, c] = rcFromTarget(e.currentTarget);
+  if (r === null) return;
+  const cell = board[r][c];
+  if (cell.revealed) return;
+  cell.flagged = !cell.flagged;
+  flagsUsed += cell.flagged ? 1 : -1;
+  drawCell(r, c);
+  updateMineCounter();
+}
+
+function onDoubleClick(e) {
+  if (gameOver || gameWon) return;
+  const [r, c] = rcFromTarget(e.currentTarget);
+  if (r === null) return;
+  chord(r, c);
+  checkWin();
+}
+
+// ── Drawing ────────────────────────────────────────────────────────────────────
+function cellEl(r, c) {
+  return boardEl.children[r * cols + c];
+}
+
+function drawCell(r, c, blast = false) {
+  const cell = board[r][c];
+  const el = cellEl(r, c);
+  // Reset classes
+  el.className = 'cell';
+  el.textContent = '';
+
+  if (cell.revealed) {
+    if (cell.mine) {
+      el.classList.add(blast ? 'mine-hit' : 'mine-revealed');
+      el.textContent = '💣';
+    } else {
+      el.classList.add('revealed');
+      if (cell.neighbors > 0) {
+        el.textContent = cell.neighbors;
+        el.classList.add(DIGIT_COLORS[cell.neighbors]);
+      }
+    }
+  } else if (cell.flagged) {
+    el.classList.add('flagged');
+    el.textContent = '🚩';
+  }
+  // else: default hidden style
+}
+
+// ── HUD updates ────────────────────────────────────────────────────────────────
+function updateMineCounter() {
+  mineCounter.textContent = `💣 ${String(numMines - flagsUsed).padStart(3, '0')}`;
+}
+
+function updateScoreDisplay() {
+  scoreLabel.textContent = `✦ SCORE  ${score}`;
+  const best = highScores[currentDiff] || 0;
+  hiScoreLabel.textContent = best ? `BEST (${currentDiff}): ${best}` : `NO BEST YET (${currentDiff})`;
+}
+
+// ── Timer ──────────────────────────────────────────────────────────────────────
+function startTimer() {
+  startTime = Date.now();
+  tick();
+}
+
+function tick() {
+  if (gameOver || gameWon || !startTime) return;
+  const elapsed = Math.min(Math.floor((Date.now() - startTime) / 1000), 999);
+  timerLabel.textContent = `⏱ ${String(elapsed).padStart(3, '0')}`;
+  timerId = setTimeout(tick, 1000);
+}
+
+function stopTimer() {
+  if (timerId) { clearTimeout(timerId); timerId = null; }
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────────
+function showModal(title, body) {
+  modalTitle.textContent = title;
+  modalBody.innerHTML = body.replace(/\n/g, '<br>');
+  modalOverlay.classList.add('show');
+}
+
+modalClose.addEventListener('click', () => modalOverlay.classList.remove('show'));
+modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) modalOverlay.classList.remove('show'); });
+
+// ── Controls ───────────────────────────────────────────────────────────────────
+diffSelect.addEventListener('change', () => {
+  currentDiff = diffSelect.value;
+  newGame();
+});
+
+newBtn.addEventListener('click', newGame);
+
+// Prevent context menu on board
+boardEl.addEventListener('contextmenu', e => e.preventDefault());
+
+// ── Init ───────────────────────────────────────────────────────────────────────
+newGame();
+</script>
+</body>
+</html>
