@@ -401,7 +401,7 @@ a{color:inherit}
   document.getElementById("stars").style.boxShadow = stars.join(",");
 
   /* ---------- splash text ---------- */
-  const splashes=["Now with code!","Also try Python!","Works on my machine!","Tune stuck in head!","Compiles first try!","100% hand-placed blocks!","Hex codes included!","git push --force-with-care","Powered by coffee!","sudo make it work","Bugs are features!","Open source!"];
+  const splashes=["Now with code!","Also try Python!","git clone coffee.git --with-extra-sugar","Works on my machine!","Compiles first try!","100% hand-placed blocks!","sudo snap install ender-dragon","Hex codes included!","Powered by coffee!","sudo make it work","Bugs are features!","Open source!"];
   const splash=document.getElementById("splash");
   let si=0;
   splash.addEventListener("click",()=>{ si=(si+1)%splashes.length; splash.textContent=splashes[si]; });
