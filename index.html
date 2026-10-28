@@ -3,560 +3,697 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>laredding2 · Block World</title>
-<meta name="description" content="Projects and code by laredding2 — Python, C#, Shell and HTML builds.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23866043'/><rect width='16' height='5' fill='%235d9e36'/><rect x='3' y='5' width='2' height='2' fill='%235d9e36'/><rect x='10' y='5' width='3' height='1' fill='%235d9e36'/></svg>">
+<title>laredding2's World</title>
+<meta name="description" content="laredding2's projects, laid out as a little pixel sandbox world.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%23976b4b'/%3E%3Crect width='8' height='2' fill='%233fae4f'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%232e8f3e'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%232e8f3e'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%232e8f3e'/%3E%3Crect x='2' y='5' width='1' height='1' fill='%237c5537'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%23ae8160'/%3E%3C/svg%3E">
 <style>
-:root{
-  --sky-top:#6fb2ff; --sky-bot:#c4e2ff; --cloud:#ffffff; --sun:#fff4a0; --sun-glow:rgba(255,244,160,.35);
-  --stars:0;
-  --panel:#c6c6c6; --panel-hi:#ffffff; --panel-lo:#555555; --edge:#1a1a1a;
-  --slot:#8b8b8b; --slot-hi:#ffffff; --slot-lo:#373737;
-  --ink:#3f3f3f; --ink-soft:#5a5a5a; --light:#ffffff; --shadow:#3f3f3f;
-  --splash:#ffff55; --xp:#80ff20; --xp-dark:#3a6b0e;
-  --underground-tint:rgba(0,0,0,.45);
-  --body-bg:#2b2b2b;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --sky-top:#070b1f; --sky-bot:#1d2750; --cloud:#8a93b8; --sun:#e6ecff; --sun-glow:rgba(200,215,255,.18);
-    --stars:1; --underground-tint:rgba(0,0,0,.6); --body-bg:#161616;
+  :root{
+    --panel:rgba(40,56,140,.84); --panel-edge:#151a46;
+    --slot:rgba(70,90,190,.85); --slot-edge:#1a2058;
+    --wood:#8a5a2e; --wood-d:#4e3018; --wood-l:#b07a45;
+    --gold:#f2d24b; --ink:#fff; --dim:#9aa6e8;
   }
-}
-:root[data-theme="dark"]{
-  --sky-top:#070b1f; --sky-bot:#1d2750; --cloud:#8a93b8; --sun:#e6ecff; --sun-glow:rgba(200,215,255,.18);
-  --stars:1; --underground-tint:rgba(0,0,0,.6); --body-bg:#161616;
-}
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:'VT323',monospace; font-size:21px; line-height:1.2; color:var(--ink);
+    background:#0b1030; text-shadow:2px 2px 0 rgba(0,0,0,.75);
+    overflow-x:hidden; min-height:100vh; display:flex; flex-direction:column;
+  }
+  .dim{color:var(--dim)}
+  #sky{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;z-index:0}
+  main{position:relative;z-index:1;width:100%;max-width:1040px;margin:0 auto;padding:76px 16px 30px;flex:1}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0; background:var(--body-bg); color:var(--light);
-  font-family:"VT323",ui-monospace,monospace; font-size:22px; line-height:1.25;
-  overflow-x:hidden;
-}
-img{image-rendering:pixelated}
-a{color:inherit}
-.px{font-family:"Press Start 2P",monospace}
+  /* ---------- wooden sign header ---------- */
+  .sign{
+    position:relative;margin:8px 8px 36px;padding:24px 22px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;
+    background:repeating-linear-gradient(180deg,var(--wood) 0 30px,var(--wood-d) 30px 32px);
+    box-shadow:0 -4px 0 0 var(--wood-d),0 4px 0 0 var(--wood-d),-4px 0 0 0 var(--wood-d),4px 0 0 0 var(--wood-d),
+      inset 0 4px 0 rgba(255,255,255,.15),inset 0 -4px 0 rgba(0,0,0,.25);
+  }
+  .sign::before,.sign::after{content:"";position:absolute;top:8px;width:6px;height:6px;background:#cfcfcf;box-shadow:2px 2px 0 #444}
+  .sign::before{left:8px}.sign::after{right:8px}
+  .avatar{flex:none;width:116px;height:116px;padding:8px;background:var(--slot);box-shadow:inset 0 0 0 4px var(--slot-edge),0 0 0 4px var(--wood-d)}
+  .avatar img{width:100%;height:100%;display:block;image-rendering:pixelated;background:#222a66}
+  .who{flex:1;min-width:220px}
+  h1{font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,30px);margin:0 0 12px;text-shadow:3px 3px 0 #000;overflow-wrap:anywhere}
+  .bio{margin:0 0 12px;font-size:23px;color:#fde9c4}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .stat{background:rgba(0,0,0,.3);padding:3px 10px;font-size:20px}
+  .stat b{color:var(--gold);font-weight:normal}
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{
+    font-family:'Press Start 2P',monospace;font-size:10px;color:#fff;text-decoration:none;padding:10px 12px;border:0;cursor:pointer;
+    background:#3e8e41;text-shadow:2px 2px 0 #000;display:inline-block;
+    box-shadow:inset -3px -3px 0 rgba(0,0,0,.3),inset 3px 3px 0 rgba(255,255,255,.25),0 0 0 3px #1c3d1d;
+  }
+  .btn:hover{filter:brightness(1.15)} .btn:active{transform:translateY(2px)}
+  .btn.blue{background:#3d5bd1;box-shadow:inset -3px -3px 0 rgba(0,0,0,.3),inset 3px 3px 0 rgba(255,255,255,.25),0 0 0 3px #1a2560}
+  .btn.wood{background:var(--wood-l);box-shadow:inset -3px -3px 0 rgba(0,0,0,.3),inset 3px 3px 0 rgba(255,255,255,.25),0 0 0 3px var(--wood-d)}
+  .btn[aria-pressed="true"]{background:#c9a227;box-shadow:inset 3px 3px 0 rgba(0,0,0,.3),0 0 0 3px #5a4610}
 
-/* ---------- top bar ---------- */
-.topbar{
-  position:sticky; top:0; z-index:50;
-  display:flex; align-items:center; gap:16px; justify-content:space-between;
-  padding:10px 16px;
-  background:var(--tex-planks) 0 0/48px, #9a7a48;
-  border-bottom:4px solid #3a2a14;
-  box-shadow:inset 0 -3px 0 rgba(0,0,0,.35);
-}
-.brand{display:flex; align-items:center; gap:10px; text-decoration:none;
-  font-family:"Press Start 2P",monospace; font-size:13px; text-shadow:2px 2px 0 #3a2a14}
-.brand-block{width:24px; height:24px; background:var(--tex-grass-side) 0 0/24px; border:2px solid #1a1a1a}
-.topbar nav{display:flex; gap:18px}
-.topbar nav a{text-decoration:none; font-size:24px; text-shadow:2px 2px 0 #3a2a14}
-.topbar nav a:hover{color:var(--splash)}
+  /* ---------- panels ---------- */
+  .panel{
+    background:var(--panel);margin:8px 8px 30px;padding:18px 18px 20px;
+    box-shadow:0 -4px 0 0 var(--panel-edge),0 4px 0 0 var(--panel-edge),-4px 0 0 0 var(--panel-edge),4px 0 0 0 var(--panel-edge),inset 0 4px 0 0 rgba(255,255,255,.12);
+  }
+  .panel h2{font-family:'Press Start 2P',monospace;font-size:14px;margin:0 0 14px;color:var(--gold);letter-spacing:1px}
+  .panel h2 small{font-family:'VT323',monospace;font-size:20px;color:#cfd6ff;letter-spacing:0;margin-left:8px}
 
-/* ---------- buttons ---------- */
-.mc-btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-height:44px; padding:6px 18px;
-  font:inherit; font-size:24px; color:#fff; text-decoration:none; cursor:pointer;
-  text-shadow:2px 2px 0 #3f3f3f;
-  background:var(--tex-stone) 0 0/64px, #7a7a7a;
-  border:2px solid #000;
-  box-shadow:inset 2px 2px 0 rgba(255,255,255,.4), inset -2px -4px 0 rgba(0,0,0,.45);
-}
-.mc-btn:hover,.mc-btn:focus-visible{
-  outline:none; color:#ffffa0;
-  background-color:#7e8fd6; background-blend-mode:multiply;
-  border-color:#fff;
-}
-.mc-btn.small{min-height:36px; font-size:20px; padding:2px 12px}
+  .slot{
+    position:relative;flex:none;width:56px;height:56px;display:grid;place-items:center;text-decoration:none;color:#fff;
+    background:var(--slot);box-shadow:inset 0 0 0 3px var(--slot-edge),inset 6px 6px 0 0 rgba(255,255,255,.08);
+    transition:transform .08s;
+  }
+  .slot img{width:36px;height:36px;image-rendering:pixelated;transition:transform .08s}
+  .slot .n{position:absolute;top:1px;left:5px;font-size:16px;color:#dfe4ff}
+  .hotbar{display:flex;gap:6px;overflow-x:auto;padding:6px 4px 10px}
+  .hotbar .slot:hover,.hotbar .slot:focus-visible{background:rgba(110,130,230,.95);box-shadow:inset 0 0 0 3px var(--gold);outline:none;transform:translateY(-3px)}
+  .hotbar .slot:hover img,.hotbar .slot:focus-visible img{transform:scale(1.15)}
 
-/* ---------- sky / hero ---------- */
-.sky{
-  position:relative; overflow:hidden;
-  min-height:min(78vh,640px);
-  background:linear-gradient(var(--sky-top),var(--sky-bot));
-  display:flex; align-items:center; justify-content:center;
-  padding:64px 16px 48px;
-}
-.stars{position:absolute; top:0; left:0; width:2px; height:2px; opacity:var(--stars); transition:opacity .8s}
-.sun{
-  position:absolute; top:48px; right:12%;
-  width:72px; height:72px; background:var(--sun);
-  box-shadow:0 0 0 14px var(--sun-glow), 0 0 0 28px var(--sun-glow);
-  transition:background .8s;
-}
-.cloud{
-  position:absolute; height:28px; background:var(--cloud); opacity:.9;
-  animation:drift linear infinite; left:0;
-}
-.cloud::before{content:""; position:absolute; left:20%; top:-20px; width:45%; height:20px; background:inherit}
-.cloud.c1{top:70px;  width:180px; animation-duration:70s; animation-delay:-10s}
-.cloud.c2{top:150px; width:120px; animation-duration:95s; animation-delay:-50s; opacity:.75}
-.cloud.c3{top:40px;  width:240px; animation-duration:120s; animation-delay:-85s; opacity:.8}
-@keyframes drift{from{transform:translateX(-260px)} to{transform:translateX(calc(100vw + 20px))}}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+  .search{
+    font-family:'VT323',monospace;font-size:21px;padding:6px 10px;color:#fff;border:0;border-radius:0;
+    background:rgba(10,14,50,.7);box-shadow:inset 0 0 0 3px var(--slot-edge);min-width:0;flex:1 1 200px;
+  }
+  .search::placeholder{color:#7f8ac9}
+  .sel{flex:0 0 auto;cursor:pointer}
+  .chk{display:flex;gap:8px;align-items:center;cursor:pointer;user-select:none}
+  .chk input{accent-color:var(--gold);width:18px;height:18px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .chip{
+    font-family:'VT323',monospace;font-size:19px;display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 6px;
+    color:#fff;border:0;cursor:pointer;text-shadow:inherit;background:rgba(10,14,50,.55);box-shadow:inset 0 0 0 2px var(--slot-edge);
+  }
+  .chip img{width:20px;height:20px;image-rendering:pixelated}
+  .chip[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--gold);background:rgba(110,130,230,.8)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+  .item{
+    display:flex;gap:12px;padding:8px;min-width:0;align-items:flex-start;text-decoration:none;color:#fff;
+    background:rgba(10,14,50,.45);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  .item:hover,.item:focus-visible{background:rgba(110,130,230,.55);box-shadow:inset 0 0 0 2px var(--gold);outline:none}
+  .item .slot{width:48px;height:48px}
+  .item .slot img{width:30px;height:30px}
+  .item:hover .slot img{transform:scale(1.12) rotate(-8deg)}
+  .meta{min-width:0;display:flex;flex-direction:column;gap:2px}
+  .nm{font-size:22px;overflow-wrap:anywhere}
+  .ds{font-size:18px;color:#cfd6ff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .lg{font-size:17px;color:var(--dim)}
+  .empty{padding:20px;text-align:center;color:#cfd6ff;grid-column:1/-1}
+  .note{margin:14px 0 0;font-size:18px}
 
-.hero{position:relative; z-index:2; text-align:center; width:100%; max-width:720px}
-.title-wrap{position:relative; display:inline-block; margin-bottom:10px}
-.title{
-  margin:0; font-family:"Press Start 2P",monospace; font-weight:400;
-  font-size:clamp(26px,7.2vw,68px); letter-spacing:2px; color:#e8e8e8;
-  text-shadow:0 3px 0 #a0a0a0, 0 6px 0 #6b6b6b, 0 9px 0 #3b3b3b, 0 14px 12px rgba(0,0,0,.35);
-}
-.splash{
-  position:absolute; right:-14px; bottom:-26px;
-  font-family:"Press Start 2P",monospace; font-size:clamp(9px,1.7vw,14px);
-  color:var(--splash); text-shadow:2px 2px 0 #3f3f00; white-space:nowrap;
-  transform:rotate(-18deg); animation:pulse .5s ease-in-out infinite alternate;
-  cursor:pointer; user-select:none;
-}
-@keyframes pulse{from{transform:rotate(-18deg) scale(.94)} to{transform:rotate(-18deg) scale(1.06)}}
-.subtitle{margin:34px 0 26px; font-size:26px; text-shadow:2px 2px 0 rgba(0,0,0,.45)}
-.menu{display:grid; gap:10px; max-width:420px; margin:0 auto}
-.menu-row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  /* ---------- tooltip / hud / toasts ---------- */
+  #tip{
+    position:fixed;z-index:50;pointer-events:none;max-width:300px;padding:8px 11px;font-size:19px;display:none;
+    background:rgba(18,22,60,.94);box-shadow:0 0 0 2px #0a0d2a,0 0 0 4px rgba(255,255,255,.14);
+  }
+  #tip .t1{font-size:23px}
+  #hud{position:fixed;top:12px;right:12px;z-index:40;display:flex;gap:10px;align-items:center}
+  #clock{font-family:'Press Start 2P',monospace;font-size:11px;padding:10px;background:var(--panel);box-shadow:0 0 0 3px var(--panel-edge)}
+  #ff{font-size:11px;padding:8px 10px}
+  #toasts{position:fixed;top:66px;right:14px;z-index:45;display:flex;flex-direction:column;gap:10px;align-items:flex-end;pointer-events:none}
+  .toast{
+    display:flex;gap:10px;align-items:center;padding:8px 12px;max-width:290px;font-size:19px;
+    background:rgba(18,22,60,.95);box-shadow:0 0 0 3px #0a0d2a,0 0 0 5px var(--gold);animation:pop .25s steps(4) both;
+  }
+  .toast.item{box-shadow:0 0 0 3px #0a0d2a;padding:5px 10px}
+  .toast img{width:28px;height:28px;image-rendering:pixelated;flex:none}
+  .toast .tt{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--gold);margin-bottom:4px}
+  .toast.out{animation:fade .4s steps(4) forwards}
+  @keyframes pop{from{transform:translateX(30px);opacity:0}}
+  @keyframes fade{to{opacity:0;transform:translateX(30px)}}
 
-/* ---------- ground ---------- */
-.ground{position:relative; line-height:0; background:var(--tex-dirt) 0 0/48px; }
-.row{display:flex; white-space:nowrap}
-.blk{flex:0 0 48px; width:48px; height:48px; cursor:pointer; background-size:48px}
-.blk.grass{background-image:var(--tex-grass-side)}
-.blk.dirt{background-image:var(--tex-dirt)}
-.blk:hover{box-shadow:inset 0 0 0 2px rgba(0,0,0,.7)}
-.blk.mined{background:transparent; cursor:default; box-shadow:none}
-.bit{position:fixed; width:8px; height:8px; pointer-events:none; z-index:60}
+  /* ---------- ground ---------- */
+  .ground-wrap{position:relative;z-index:1;width:100%;margin-top:10px}
+  .ground-hud{position:absolute;left:14px;top:8px;font-size:20px;pointer-events:none}
+  #ground{display:block;width:100%;height:auto;image-rendering:pixelated;cursor:crosshair;touch-action:none}
+  footer{position:relative;z-index:1;background:#1c1410;color:#a99582;text-align:center;padding:14px 16px 18px;font-size:18px;text-shadow:none;box-shadow:inset 0 4px 0 #0e0a08}
+  footer a{color:#e0c9a8}
 
-/* ---------- underground ---------- */
-.underground{
-  background:linear-gradient(var(--underground-tint),var(--underground-tint)), var(--tex-stone) 0 0/64px, #6f6f6f;
-  padding:56px 16px 72px;
-}
-.wrap{max-width:1080px; margin:0 auto}
-.section{margin-bottom:72px}
-.section-title{
-  font-family:"Press Start 2P",monospace; font-weight:400; font-size:clamp(16px,3vw,24px);
-  margin:0 0 10px; text-shadow:3px 3px 0 #000;
-}
-.section-sub{margin:0 0 22px; color:#dcdcdc; text-shadow:2px 2px 0 #000}
-
-.gui{
-  background:var(--panel); color:var(--ink);
-  border:3px solid var(--edge);
-  box-shadow:inset 3px 3px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo);
-  padding:18px;
-}
-.slot{
-  background:var(--slot);
-  box-shadow:inset 2px 2px 0 var(--slot-lo), inset -2px -2px 0 var(--slot-hi);
-}
-
-/* profile */
-.profile{display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:center}
-.avatar-slot{width:132px; height:132px; padding:6px}
-.avatar-slot img{width:100%; height:100%; display:block; object-fit:cover}
-.profile h2{margin:0 0 6px; font-family:"Press Start 2P",monospace; font-weight:400; font-size:16px}
-.bio{margin:0 0 14px; color:var(--ink-soft)}
-.xp{position:relative; margin:4px 0 14px}
-.xp-bar{height:14px; background:#1b1b1b; border:2px solid #000}
-.xp-bar span{display:block; height:100%; width:0; background:linear-gradient(var(--xp) 50%, #5cc414 50%);
-  transition:width 1.2s steps(20)}
-.xp-level{position:absolute; left:50%; top:-20px; transform:translateX(-50%);
-  font-family:"Press Start 2P",monospace; font-size:14px; color:var(--xp);
-  text-shadow:2px 0 #000,-2px 0 #000,0 2px #000,0 -2px #000}
-.stats{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px 22px}
-.stats b{font-family:"Press Start 2P",monospace; font-size:13px; font-weight:400; margin-right:6px}
-
-/* hotbar */
-.hotbar-wrap{overflow-x:auto; padding:4px 0 10px; margin-bottom:12px}
-.hotbar{
-  display:inline-flex; gap:0; padding:4px;
-  background:rgba(0,0,0,.55); border:3px solid #111;
-}
-.hb{
-  position:relative; width:56px; height:56px; display:grid; place-items:center;
-  border:none; cursor:pointer; padding:0; margin:0;
-  background:#8b8b8b; box-shadow:inset 2px 2px 0 #373737, inset -2px -2px 0 #fff;
-  outline:3px solid transparent; outline-offset:-3px;
-}
-.hb + .hb{margin-left:4px}
-.hb.sel{outline-color:#fff; box-shadow:inset 2px 2px 0 #373737, inset -2px -2px 0 #fff, 0 0 0 3px #000}
-.hb .count{position:absolute; right:3px; bottom:1px; font-size:20px; color:#fff; text-shadow:2px 2px 0 #3f3f3f}
-.hb-label{margin-top:4px; min-height:26px; font-size:24px; color:#fff; text-shadow:2px 2px 0 #000}
-
-/* item icon */
-.item{
-  width:30px; height:30px; flex:0 0 30px; display:grid; place-items:center;
-  font-family:"Press Start 2P",monospace; font-size:8px; color:#fff; text-shadow:1px 1px 0 rgba(0,0,0,.6);
-  border:2px solid #111;
-  box-shadow:inset 2px 2px 0 rgba(255,255,255,.35), inset -2px -2px 0 rgba(0,0,0,.35);
-}
-
-/* controls */
-.controls{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:22px}
-.controls input[type=search], .controls select{
-  font:inherit; font-size:22px; color:#e0e0e0; background:#000; border:2px solid #a0a0a0;
-  padding:4px 10px; min-height:40px;
-}
-.controls input[type=search]{flex:1 1 220px; min-width:0}
-.controls input[type=search]:focus, .controls select:focus{outline:none; border-color:#fff}
-.controls label{display:flex; align-items:center; gap:8px; cursor:pointer; text-shadow:2px 2px 0 #000}
-.controls input[type=checkbox]{width:20px; height:20px; accent-color:#5cc414}
-
-/* repo grid */
-.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px}
-.card{display:flex; flex-direction:column; gap:8px; text-decoration:none; padding:14px 16px;
-  transition:transform .08s}
-.card:hover,.card:focus-visible{transform:translate(-2px,-2px); outline:none;
-  box-shadow:inset 3px 3px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo), 4px 4px 0 #000}
-.card-head{display:flex; gap:10px; align-items:center}
-.card-name{font-size:26px; color:#202020; word-break:break-word; line-height:1}
-.card-desc{margin:0; color:var(--ink-soft); flex:1}
-.card-desc.empty{font-style:italic; opacity:.75}
-.card-meta{display:flex; flex-wrap:wrap; gap:4px 14px; font-size:19px; color:#4a4a4a}
-.tag{background:#5a3e8a; color:#fff; padding:0 6px; font-size:18px}
-.status{text-align:center; color:#dcdcdc; text-shadow:2px 2px 0 #000; margin-top:20px}
-
-/* crafting */
-.craft{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:22px}
-.craft-grid{display:grid; grid-template-columns:repeat(3,64px); gap:4px}
-.craft-grid .slot, .result{width:64px; height:64px; display:grid; place-items:center; position:relative}
-.craft-grid .item{width:40px; height:40px; font-size:10px}
-.arrow{font-family:"Press Start 2P",monospace; font-size:28px; color:#8b8b8b}
-.result{width:84px; height:84px}
-.result .item{width:52px; height:52px; font-size:9px}
-.result .count{position:absolute; right:4px; bottom:0; font-size:24px; color:#fff; text-shadow:2px 2px 0 #3f3f3f}
-.craft-note{flex-basis:100%; text-align:center; margin:4px 0 0; color:var(--ink-soft)}
-
-/* footer */
-.bedrock{
-  background:linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.25)), var(--tex-bedrock) 0 0/48px, #222;
-  border-top:4px solid #000; padding:36px 16px 28px; text-align:center;
-}
-.bedrock .links{display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:18px}
-.bedrock small{display:block; color:#bdbdbd; font-size:18px; text-shadow:2px 2px 0 #000}
-
-@media (max-width:640px){
-  .topbar nav{display:none}
-  .profile{grid-template-columns:1fr; justify-items:center; text-align:center}
-  .stats{justify-content:center}
-  .hb{width:46px; height:46px}
-  .sun{width:52px; height:52px; right:8%}
-  .craft-grid{grid-template-columns:repeat(3,54px)}
-  .craft-grid .slot{width:54px; height:54px}
-}
-@media (prefers-reduced-motion:reduce){
-  .cloud,.splash{animation:none}
-  .xp-bar span{transition:none}
-  html{scroll-behavior:auto}
-}
+  @media (max-width:560px){
+    main{padding-top:68px}
+    .sign{flex-direction:column;text-align:center}
+    .stats,.btns{justify-content:center}
+    #clock{font-size:9px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<canvas id="sky" aria-hidden="true"></canvas>
 
-<header class="topbar">
-  <a class="brand" href="#top"><span class="brand-block"></span>laredding2</a>
-  <nav aria-label="Sections">
-    <a href="#projects">Projects</a>
-    <a href="#crafting">Skills</a>
-    <a href="#links">Links</a>
-  </nav>
-  <button id="themeBtn" class="mc-btn small" type="button">☾ Night</button>
-</header>
+<div id="hud">
+  <span id="clock" aria-label="World time">--:--</span>
+  <button class="btn blue" id="ff" aria-pressed="false" title="Fast-forward time">&#9193;</button>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<div id="tip" role="tooltip"></div>
 
-<section id="top" class="sky">
-  <div class="stars" id="stars"></div>
-  <div class="sun"></div>
-  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
-
-  <div class="hero">
-    <div class="title-wrap">
-      <h1 class="title">LAREDDING2</h1>
-      <span class="splash" id="splash" title="Click me">Now with code!</span>
-    </div>
-    <p class="subtitle">Python · C# · Shell · HTML</p>
-    <div class="menu">
-      <a class="mc-btn" href="#projects">Singleplayer: My Projects</a>
-      <a class="mc-btn" href="https://github.com/laredding2" target="_blank" rel="noopener">Multiplayer: GitHub Profile</a>
-      <div class="menu-row">
-        <a class="mc-btn" href="#crafting">Skills</a>
-        <a class="mc-btn" href="https://gitlab.com/laredding2" target="_blank" rel="noopener">GitLab</a>
+<main>
+  <header class="sign">
+    <div class="avatar"><img id="avatar" alt="laredding2's avatar" width="100" height="100"></div>
+    <div class="who">
+      <h1 id="name">laredding2</h1>
+      <p class="bio" id="bio">🎵 I always have a tune floating around in my head</p>
+      <div class="stats" id="stats"></div>
+      <div class="btns">
+        <a class="btn" href="https://github.com/laredding2" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn blue" href="https://github.com/laredding2?tab=repositories" target="_blank" rel="noopener">All Repos</a>
+        <a class="btn wood" href="https://gitlab.com/laredding2" target="_blank" rel="noopener">GitLab</a>
       </div>
     </div>
-  </div>
-</section>
+  </header>
 
-<div class="ground" id="ground" title="Click a block to mine it"></div>
+  <section class="panel">
+    <h2>Hotbar <small>recently updated &middot; press 1&ndash;0</small></h2>
+    <div class="hotbar" id="hotbar"></div>
+  </section>
 
-<main class="underground">
-  <div class="wrap">
-
-    <section class="section" id="profile">
-      <div class="gui profile">
-        <div class="slot avatar-slot">
-          <img src="https://avatars.githubusercontent.com/u/243619288?v=4" alt="laredding2's avatar">
-        </div>
-        <div>
-          <h2>Player: laredding2</h2>
-          <p class="bio">🎵 I always have a tune floating around in my head</p>
-          <div class="xp" title="Level = original repos · bar = share of repos that are original">
-            <div class="xp-level" id="xpLevel">0</div>
-            <div class="xp-bar"><span id="xpFill"></span></div>
-          </div>
-          <ul class="stats">
-            <li><b id="stRepos">–</b>repos</li>
-            <li><b id="stOrig">–</b>originals</li>
-            <li><b id="stStars">–</b>stars</li>
-            <li><b id="stLangs">–</b>languages</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="projects">
-      <h2 class="section-title">Inventory</h2>
-      <p class="section-sub">Every public repo, pulled live from GitHub. Pick a language from the hotbar (or press 1–9) to filter.</p>
-
-      <div class="hotbar-wrap"><div class="hotbar" id="hotbar" role="toolbar" aria-label="Filter by language"></div></div>
-      <div class="hb-label" id="hbLabel"></div>
-
-      <div class="controls">
-        <input type="search" id="search" placeholder="Search repos…" aria-label="Search repositories">
-        <select id="sort" aria-label="Sort">
-          <option value="updated">Recently updated</option>
-          <option value="stars">Most stars</option>
-          <option value="name">Name A–Z</option>
-        </select>
-        <label><input type="checkbox" id="forks"> Show forks</label>
-      </div>
-
-      <div class="grid" id="grid"></div>
-      <p class="status" id="status">Loading chunks…</p>
-    </section>
-
-    <section class="section" id="crafting">
-      <h2 class="section-title">Crafting Table</h2>
-      <p class="section-sub">The recipe behind everything in the inventory.</p>
-      <div class="gui craft">
-        <div class="craft-grid" id="craftGrid"></div>
-        <div class="arrow" aria-hidden="true">➜</div>
-        <div class="slot result"><div class="item" style="background:#b8860b">APP</div><span class="count" id="craftCount">1</span></div>
-        <p class="craft-note">Python + C# + Shell + HTML + Git + a tune stuck in my head = projects.</p>
-      </div>
-    </section>
-
-  </div>
+  <section class="panel">
+    <h2>Chest <small id="count"></small></h2>
+    <div class="controls">
+      <input class="search" id="q" type="search" placeholder="Search items&hellip;" aria-label="Search repositories">
+      <select class="search sel" id="sort" aria-label="Sort repositories">
+        <option value="pushed">Recently updated</option>
+        <option value="stars">Most stars</option>
+        <option value="name">Name A&ndash;Z</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="forks"> Show forks</label>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+    <p class="note dim" id="note" hidden>GitHub's API is resting right now (rate limit), so this is a saved snapshot. Refresh later for the full chest.</p>
+  </section>
 </main>
 
-<footer class="bedrock" id="links">
-  <div class="links">
-    <a class="mc-btn" href="https://github.com/laredding2" target="_blank" rel="noopener">GitHub</a>
-    <a class="mc-btn" href="https://gitlab.com/laredding2" target="_blank" rel="noopener">GitLab</a>
-    <a class="mc-btn" href="#top">Back to surface ↑</a>
-  </div>
-  <small>© <span id="yr"></span> laredding2 · Built block by block · Fan-made theme, not affiliated with Mojang or Microsoft.</small>
-</footer>
+<section class="ground-wrap">
+  <div class="ground-hud">&#9935; <span id="mined">0</span> blocks mined &middot; click &amp; hold to dig</div>
+  <canvas id="ground" aria-label="Diggable pixel terrain"></canvas>
+</section>
+<footer>laredding2 &middot; built with plain HTML, CSS &amp; JS &middot; <a href="https://github.com/laredding2">github.com/laredding2</a></footer>
 
 <script>
 (() => {
-  const USER = "laredding2";
+'use strict';
+const USER = 'laredding2';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('lw_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('lw_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+const rgb = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+function disc(ctx, cx, cy, r, col) { ctx.fillStyle = col; for (let y = -r; y <= r; y++) for (let x = -r; x <= r; x++) if (x * x + y * y <= r * r + r * .8) ctx.fillRect(cx + x, cy + y, 1, 1); }
 
-  /* ---------- procedural pixel textures ---------- */
-  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-  const pick = (r,a) => a[Math.floor(r()*a.length)];
-  function tex(seed, fn){
-    const c=document.createElement("canvas"); c.width=c.height=16;
-    const x=c.getContext("2d"), r=rng(seed);
-    for(let py=0;py<16;py++) for(let px=0;px<16;px++){ x.fillStyle=fn(px,py,r); x.fillRect(px,py,1,1); }
-    return c.toDataURL();
-  }
-  const DIRT=["#866043","#6c4a31","#97704f","#79553a","#5d3f2a","#8a6446"];
-  const GRASS=["#5d9e36","#6fb33f","#4f8a2c","#7cc34a","#548f30"];
-  const STONE=["#7f7f7f","#747474","#8a8a8a","#6b6b6b","#949494","#7a7a7a"];
-  const BED=["#1d1d1d","#3a3a3a","#565656","#0f0f0f","#2a2a2a"];
-  const PLANK=["#a0814d","#9a7a48","#ad8c56","#94733f"];
-  const edgeR=rng(7), edge=Array.from({length:16},()=>3+Math.floor(edgeR()*3));
+/* ================= pixel item icons ================= */
+const ICONS = {
+  sword:  ["........bb",".......bab","......bab.",".....bab..","....bab...",".g.bab....","..gab.....","..hg......",".h..g.....","h........."],
+  pickaxe:["...aaaa...",".aab..baa.","aa..hh..aa","a...hh...a","....hh....","....hh....","....hh....","....hh....","....hh....","....hh...."],
+  potion: ["...hhhh...","....bb....","....ab....","...aaaa...","..abaaaa..",".abaaaaaa.",".aaaaaaaa.",".aaaaaaaa.","..aaaaaa..","...aaaa..."],
+  gem:    ["..........","...bbbb...","..baaaab..",".baaaaaab.","aaaaaaaaaa",".aaaaaaaa.","..aaaaaa..","...aaaa...","....aa....",".........."],
+  hammer: [".aaaaaaa..",".abbbbba..",".aaaaaaa..","....hh....","....hh....","....hh....","....hh....","....hh....","....hh....","....hh...."],
+  book:   ["..hhhhhhh.",".haaaaaah.",".habbbbah.",".haaaaaah.",".habbbaah.",".haaaaaah.",".haaaaaah.",".hhhhhhhh.",".gggggggg.",".........."],
+  log:    ["..........","..hhhhhh..",".hbbbbbbh.","hbaaaaaabh","hbaabbaabh","hbaabbaabh","hbaaaaaabh",".hbbbbbbh.","..hhhhhh..",".........."],
+  trophy: ["aaaaaaaaaa","a.abbaaa.a","a.abaaaa.a",".aabaaaaa.","..aaaaaa..","...aaaa...","....aa....","....aa....","...hhhh...","..hhhhhh.."]
+};
+const KIND = {sword:'Sword', pickaxe:'Pickaxe', potion:'Potion', gem:'Gem', hammer:'Hammer', book:'Tome'};
+const LANG = {
+  Python:['sword','#4f8fe0','#cfe6ff'], 'C#':['pickaxe','#a06ae0','#e3ccff'], HTML:['potion','#e8673c','#ffd0b8'],
+  CSS:['potion','#4a7ce0','#cfe0ff'], JavaScript:['gem','#f0d23c','#fff6b8'], TypeScript:['gem','#3f7fd0','#c8e0ff'],
+  Shell:['hammer','#6fc04a','#d6ffc0'], PowerShell:['hammer','#3c78c8','#c8dcff'], GDScript:['potion','#4ac0b0','#c8fff6'],
+  Java:['hammer','#c8873c','#ffe0b8'], C:['pickaxe','#9aa4b0','#eef2f6'], 'C++':['pickaxe','#e04a7a','#ffc8d8'],
+  Rust:['hammer','#d0703c','#ffd8b8'], Go:['gem','#3cc8e0','#c8f6ff'], Lua:['potion','#3c50d0','#c8d0ff'],
+  'Jupyter Notebook':['book','#f08c3c','#ffe0c0']
+};
+const DEF = ['book', '#8a8f9a', '#e0e4ea'];
+const iconCache = {};
+function icon(type, a, b) {
+  const k = type + a + b;
+  if (iconCache[k]) return iconCache[k];
+  const c = document.createElement('canvas'); c.width = c.height = 12;
+  const x = c.getContext('2d'); const col = {a, b, h:'#8a5a2b', g:'#e8b84a'};
+  for (const pass of [0, 1]) ICONS[type].forEach((row, y) => [...row].forEach((ch, X) => {
+    if (ch === '.') return;
+    x.fillStyle = pass ? col[ch] : 'rgba(0,0,0,.55)';
+    x.fillRect(X + 1 + (pass ? 0 : 1), y + 1 + (pass ? 0 : 1), 1, 1);
+  }));
+  return iconCache[k] = c.toDataURL();
+}
+const langIcon = l => { const d = LANG[l] || DEF; return icon(d[0], d[1], d[2]); };
 
-  const T = {
-    "dirt": tex(11,(x,y,r)=>pick(r,DIRT)),
-    "grass-side": tex(12,(x,y,r)=> y<edge[x] ? pick(r,GRASS) : pick(r,DIRT)),
-    "stone": tex(13,(x,y,r)=>pick(r,STONE)),
-    "bedrock": tex(14,(x,y,r)=>pick(r,BED)),
-    "planks": tex(15,(x,y,r)=> (y%4===3) ? "#6b5028" : ((x===(y<4?5:y<8?12:y<12?2:9)) ? "#7a5c30" : pick(r,PLANK)))
-  };
-  for(const k in T) document.documentElement.style.setProperty(`--tex-${k}`, `url(${T[k]})`);
+const RAR = [['Common','#ffffff'],['Uncommon','#9696ff'],['Rare','#96ff96'],['Epic','#ffc896'],['Legendary','#ff9696'],['Mythic','#ff96ff']];
+function rarity(r) {
+  const days = r.pushed_at ? (Date.now() - Date.parse(r.pushed_at)) / 864e5 : 999;
+  const s = (r.stargazers_count || 0) * 3 + (r.forks_count || 0) * 2 + (r.description ? 1 : 0) + (days < 30 ? 1 : 0) + (r.fork ? 0 : 1) + ((r.topics || []).length ? 1 : 0);
+  return RAR[s >= 13 ? 5 : s >= 7 ? 4 : s >= 4 ? 3 : s === 3 ? 2 : s === 2 ? 1 : 0];
+}
+function ago(iso) {
+  if (!iso) return 'a while ago';
+  const s = (Date.now() - Date.parse(iso)) / 1000;
+  for (const [n, w] of [[31536e3,'year'],[2592e3,'month'],[604800,'week'],[86400,'day'],[3600,'hour'],[60,'minute']])
+    if (s >= n) { const v = Math.floor(s / n); return `${v} ${w}${v > 1 ? 's' : ''} ago`; }
+  return 'just now';
+}
+const pushedMs = r => r.pushed_at ? Date.parse(r.pushed_at) : 0;
+const byPushed = (a, b) => pushedMs(b) - pushedMs(a);
 
-  /* ---------- day / night ---------- */
-  const root=document.documentElement, themeBtn=document.getElementById("themeBtn");
-  const isNight = () => root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  const syncBtn = () => themeBtn.textContent = isNight() ? "☀ Day" : "☾ Night";
-  themeBtn.addEventListener("click",()=>{ root.dataset.theme = isNight() ? "light" : "dark"; syncBtn(); });
-  syncBtn();
+/* ================= data ================= */
+const fbRepo = (name, language, description = '') => ({name, language, description, fork:false, html_url:`https://github.com/${USER}/${name}`, stargazers_count:0, forks_count:0, pushed_at:null, topics:[]});
+let user = {login:USER, avatar_url:'https://avatars.githubusercontent.com/u/243619288?v=4', bio:'🎵 I always have a tune floating around in my head', public_repos:76, followers:4, following:19};
+let repos = [
+  fbRepo('Galaxian-AI-Proof-of-Concept', 'Python', 'Proof of Concept by ChatGPT, Gemini, Claude, Grok, and Copilot.'),
+  fbRepo('Hex-Color-Generator', 'Python', 'A GUI to get hex codes for colors.'),
+  fbRepo('Engineering-Calculator', 'Python')
+];
+let offline = false;
 
-  // stars
-  const sr=rng(99), stars=[];
-  for(let i=0;i<120;i++) stars.push(`${Math.floor(sr()*2400)}px ${Math.floor(sr()*520)}px 0 ${sr()<.15?1:0}px rgba(255,255,255,${(.4+sr()*.6).toFixed(2)})`);
-  document.getElementById("stars").style.boxShadow = stars.join(",");
-
-  /* ---------- splash text ---------- */
-  const splashes=["Now with code!","Also try Python!","git clone coffee.git --with-extra-sugar","Works on my machine!","Compiles first try!","100% hand-placed blocks!","sudo snap install ender-dragon","Hex codes included!","Powered by coffee!","sudo make it work","Bugs are features!","Open source!"];
-  const splash=document.getElementById("splash");
-  let si=0;
-  splash.addEventListener("click",()=>{ si=(si+1)%splashes.length; splash.textContent=splashes[si]; });
-  splash.textContent = splashes[si = Math.floor(Math.random()*splashes.length)];
-
-  /* ---------- mineable ground ---------- */
-  const ground=document.getElementById("ground");
-  const PAL={grass:GRASS.concat(DIRT.slice(0,2)), dirt:DIRT};
-  function buildGround(){
-    const n=Math.ceil(innerWidth/48)+1; ground.innerHTML="";
-    ["grass","dirt","dirt"].forEach(type=>{
-      const row=document.createElement("div"); row.className="row";
-      for(let i=0;i<n;i++){ const b=document.createElement("div"); b.className="blk "+type; b.dataset.type=type; row.appendChild(b); }
-      ground.appendChild(row);
-    });
-  }
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  ground.addEventListener("click",e=>{
-    const b=e.target.closest(".blk"); if(!b||b.classList.contains("mined")) return;
-    const rect=b.getBoundingClientRect(), pal=PAL[b.dataset.type];
-    b.classList.add("mined");
-    if(!reduce) for(let i=0;i<10;i++){
-      const p=document.createElement("div"); p.className="bit";
-      p.style.background=pal[i%pal.length];
-      p.style.left=(rect.left+12+Math.random()*24)+"px"; p.style.top=(rect.top+12+Math.random()*24)+"px";
-      document.body.appendChild(p);
-      const vx=(Math.random()-.5)*120, vy=-40-Math.random()*80;
-      p.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${vx*.6}px,${vy}px)`,opacity:1,offset:.35},{transform:`translate(${vx}px,${80+Math.random()*60}px)`,opacity:0}],
-        {duration:700+Math.random()*300,easing:"cubic-bezier(.3,.6,.6,1)"}).onfinish=()=>p.remove();
+async function getJSON(u) { const r = await fetch(u, {headers:{Accept:'application/vnd.github+json'}}); if (!r.ok) throw new Error(r.status); return r.json(); }
+async function load() {
+  try {
+    const u = await getJSON(`https://api.github.com/users/${USER}`);
+    let all = [];
+    for (let p = 1; p <= 5; p++) {
+      const page = await getJSON(`https://api.github.com/users/${USER}/repos?per_page=100&page=${p}&sort=pushed`);
+      all = all.concat(page);
+      if (page.length < 100) break;
     }
-    setTimeout(()=>b.classList.remove("mined"), 5000);
-  });
-  buildGround();
-  let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(buildGround,200);});
+    user = u; repos = all; offline = false;
+  } catch (e) { offline = true; }
+  render();
+}
 
-  /* ---------- languages ---------- */
-  const LANG={
-    "Python":{c:"#3572A5",a:"PY"}, "C#":{c:"#178600",a:"C#"}, "Shell":{c:"#4e9a06",a:"SH"},
-    "HTML":{c:"#e34c26",a:"</>"}, "JavaScript":{c:"#c9b200",a:"JS"}, "TypeScript":{c:"#3178c6",a:"TS"},
-    "CSS":{c:"#563d7c",a:"CSS"}, "C":{c:"#555555",a:"C"}, "C++":{c:"#f34b7d",a:"C++"},
-    "Java":{c:"#b07219",a:"JV"}, "Go":{c:"#00ADD8",a:"GO"}, "Rust":{c:"#a0522d",a:"RS"},
-    "PowerShell":{c:"#012456",a:"PS"}, "Batchfile":{c:"#6b8e23",a:"BAT"}, "Jupyter Notebook":{c:"#DA5B0B",a:"NB"}
+/* ================= rendering ================= */
+const state = {lang:'All', q:'', forks:false, sort:'pushed'};
+let hot = [];
+function render() {
+  $('#avatar').src = user.avatar_url + (user.avatar_url.includes('?') ? '&' : '?') + 's=40';
+  $('#name').textContent = user.name || user.login;
+  $('#bio').textContent = user.bio || '';
+  const stars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+  $('#stats').innerHTML = [['Repos', user.public_repos], ['Followers', user.followers], ['Following', user.following], ['Stars', stars]]
+    .map(([k, v]) => `<span class="stat">${k} <b>${v ?? '?'}</b></span>`).join('');
+  $('#note').hidden = !offline;
+  renderHotbar(); renderChips(); renderInv();
+}
+function renderHotbar() {
+  hot = repos.filter(r => !r.fork).sort(byPushed).slice(0, 10);
+  $('#hotbar').innerHTML = hot.map((r, i) =>
+    `<a class="slot" href="${esc(r.html_url)}" target="_blank" rel="noopener" data-h="${i}" aria-label="${esc(r.name)}"><span class="n">${(i + 1) % 10}</span><img src="${langIcon(r.language)}" alt=""></a>`
+  ).join('') || '<div class="empty">No items yet.</div>';
+}
+function langCounts() {
+  const c = {};
+  repos.filter(r => state.forks || !r.fork).forEach(r => { const l = r.language || 'Other'; c[l] = (c[l] || 0) + 1; });
+  return Object.entries(c).sort((a, b) => b[1] - a[1]);
+}
+function renderChips() {
+  const langs = langCounts();
+  if (state.lang !== 'All' && !langs.some(([l]) => l === state.lang)) state.lang = 'All';
+  const total = langs.reduce((s, x) => s + x[1], 0);
+  $('#chips').innerHTML = [['All', total], ...langs].map(([l, n]) =>
+    `<button class="chip" data-l="${esc(l)}" aria-pressed="${state.lang === l}">${l === 'All' ? '' : `<img src="${langIcon(l)}" alt="">`}${esc(l)} <span class="dim">&times;${n}</span></button>`
+  ).join('');
+}
+function filtered() {
+  let list = repos.filter(r => state.forks || !r.fork);
+  if (state.lang !== 'All') list = list.filter(r => (r.language || 'Other') === state.lang);
+  const q = state.q.trim().toLowerCase();
+  if (q) list = list.filter(r => (r.name + ' ' + (r.description || '') + ' ' + (r.topics || []).join(' ')).toLowerCase().includes(q));
+  const sorts = {
+    pushed: byPushed,
+    stars: (a, b) => ((b.stargazers_count || 0) - (a.stargazers_count || 0)) || byPushed(a, b),
+    name: (a, b) => a.name.localeCompare(b.name)
   };
-  const langInfo = l => LANG[l] || {c: l ? "#7a7a7a" : "#5a5a5a", a: l ? l.slice(0,3).toUpperCase() : "?"};
-  const itemHTML = (l) => { const i=langInfo(l); return `<div class="item" style="background:${i.c}">${esc(i.a)}</div>`; };
-  function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  return list.sort(sorts[state.sort]);
+}
+function renderInv() {
+  const list = filtered();
+  $('#count').textContent = `${list.length} item${list.length === 1 ? '' : 's'}`;
+  $('#grid').innerHTML = list.length ? list.map(r => {
+    const [rn, rc] = rarity(r);
+    return `<a class="item" href="${esc(r.html_url)}" target="_blank" rel="noopener">
+      <span class="slot"><img src="${langIcon(r.language)}" alt=""></span>
+      <span class="meta"><span class="nm" style="color:${rc}">${esc(r.name)}</span>
+      ${r.description ? `<span class="ds">${esc(r.description)}</span>` : ''}
+      <span class="lg">${esc(r.language || 'Unknown')} &middot; ${rn}${r.fork ? ' &middot; fork' : ''} &middot; &#9733;${r.stargazers_count || 0} &middot; ${ago(r.pushed_at)}</span></span></a>`;
+  }).join('') : '<div class="empty">This chest is empty. Try a different filter.</div>';
+}
 
-  // crafting grid
-  const recipe=["Python","C#","Shell","HTML","__git","Python","__idea","__music","HTML"];
-  document.getElementById("craftGrid").innerHTML = recipe.map(k=>{
-    if(k==="__git") return `<div class="slot"><div class="item" style="background:#f05033">GIT</div></div>`;
-    if(k==="__idea") return `<div class="slot"><div class="item" style="background:#d4a017">!</div></div>`;
-    if(k==="__music") return `<div class="slot"><div class="item" style="background:#8e44ad;font-size:16px">♪</div></div>`;
-    return `<div class="slot">${itemHTML(k)}</div>`;
-  }).join("");
+$('#chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; state.lang = b.dataset.l; renderChips(); renderInv(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; renderInv(); });
+$('#sort').addEventListener('change', e => { state.sort = e.target.value; renderInv(); });
+$('#forks').addEventListener('change', e => { state.forks = e.target.checked; renderChips(); renderInv(); });
 
-  /* ---------- repos ---------- */
-  const FALLBACK=[
-    {name:"Engineering-Calculator",description:"",language:"Python",stargazers_count:0,fork:false,html_url:"https://github.com/laredding2/Engineering-Calculator",pushed_at:null},
-    {name:"Galaxian-AI-Proof-of-Concept",description:"Proof of Concept by ChatGPT, Gemini, Claude, Grok, and Copilot.",language:"Python",stargazers_count:0,fork:false,html_url:"https://github.com/laredding2/Galaxian-AI-Proof-of-Concept",pushed_at:null},
-    {name:"Hex-Color-Generator",description:"A GUI to get hex codes for colors.",language:"Python",stargazers_count:0,fork:false,html_url:"https://github.com/laredding2/Hex-Color-Generator",pushed_at:null}
-  ];
-  let repos=[], lang="All";
-  const $=id=>document.getElementById(id);
-  const grid=$("grid"), status=$("status"), hotbar=$("hotbar"), hbLabel=$("hbLabel");
-
-  function ago(iso){
-    if(!iso) return "";
-    const d=(Date.now()-new Date(iso))/864e5;
-    if(d<1) return "today"; if(d<2) return "yesterday";
-    if(d<30) return Math.floor(d)+" days ago"; if(d<365) return Math.floor(d/30)+" mo ago";
-    return Math.floor(d/365)+" yr ago";
+/* ---- tooltip ---- */
+const tip = $('#tip'), hotbar = $('#hotbar');
+function tipHTML(r) {
+  const [rn, rc] = rarity(r); const d = LANG[r.language] || DEF;
+  return `<div class="t1" style="color:${rc}">${esc(r.name)}</div>
+    <div>${esc(r.language || 'Unknown')} ${KIND[d[0]]}</div><div class="dim">${rn}</div>
+    ${r.description ? `<div>${esc(r.description)}</div>` : ''}
+    <div>&#9733; ${r.stargazers_count || 0} &nbsp; &#9282; ${r.forks_count || 0}</div>
+    <div class="dim">Updated ${ago(r.pushed_at)}</div><div class="dim">Click to open</div>`;
+}
+function showTip(r, x, y) {
+  if (!r) return;
+  tip.innerHTML = tipHTML(r); tip.style.display = 'block';
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let L = x + 16, T = y + 16;
+  if (L + w > innerWidth - 8) L = x - w - 12;
+  if (T + h > innerHeight - 8) T = y - h - 12;
+  tip.style.left = Math.max(8, L) + 'px'; tip.style.top = Math.max(8, T) + 'px';
+}
+const hideTip = () => { tip.style.display = 'none'; };
+hotbar.addEventListener('mousemove', e => { const s = e.target.closest('.slot'); s ? showTip(hot[s.dataset.h], e.clientX, e.clientY) : hideTip(); });
+hotbar.addEventListener('mouseleave', hideTip);
+hotbar.addEventListener('focusin', e => { const s = e.target.closest('.slot'); if (!s) return; const b = s.getBoundingClientRect(); showTip(hot[s.dataset.h], b.left, b.bottom); });
+hotbar.addEventListener('focusout', hideTip);
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input,select,textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^[0-9]$/.test(e.key)) {
+    const i = e.key === '0' ? 9 : +e.key - 1;
+    const s = hotbar.querySelector(`[data-h="${i}"]`);
+    if (s) { s.focus(); e.preventDefault(); }
   }
+});
 
-  function visibleBase(){ return $("forks").checked ? repos : repos.filter(r=>!r.fork); }
+/* ---- toasts & achievements ---- */
+const ACH = {
+  first:['Breaking Ground','Mine your first block'], ore:['Prospector','Dig up some ore'], gem:['Shiny!','Find a gem deep down'],
+  dig50:['Deep Digger','Mine 50 blocks'], lumber:['Lumberjack','Chop down a tree'], night:['Night Owl','Visit after dark'],
+  time:['Time Bender','Fast-forward the clock']
+};
+const got = store.get('ach', {});
+function toast(html, cls = '') {
+  const box = $('#toasts'), d = document.createElement('div');
+  d.className = 'toast ' + cls; d.innerHTML = html; box.appendChild(d);
+  while (box.children.length > 4) box.firstChild.remove();
+  setTimeout(() => { d.classList.add('out'); setTimeout(() => d.remove(), 450); }, cls === 'item' ? 1800 : 4200);
+}
+const pickup = (name, img) => toast(`<img src="${img}" alt=""><span>+1 ${esc(name)}</span>`, 'item');
+function unlock(k) {
+  if (got[k]) return; got[k] = 1; store.set('ach', got);
+  toast(`<img src="${icon('trophy', '#f2d24b', '#fff6c0')}" alt=""><div><div class="tt">Achievement!</div><div>${ACH[k][0]}</div><div class="dim">${ACH[k][1]}</div></div>`);
+}
 
-  function buildHotbar(){
-    const counts={};
-    visibleBase().forEach(r=>{ const l=r.language||"Other"; counts[l]=(counts[l]||0)+1; });
-    const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    if(lang!=="All" && !counts[lang]) lang="All";
-    const slots=[["All",visibleBase().length],...top];
-    hotbar.innerHTML = slots.map(([l,n],i)=>{
-      const icon = l==="All" ? `<div class="item" style="background:#b8860b">ALL</div>` : itemHTML(l==="Other"?null:l);
-      return `<button class="hb${l===lang?" sel":""}" data-lang="${esc(l)}" title="${esc(l)} (${n}) — key ${i+1}" aria-pressed="${l===lang}">${icon}<span class="count">${n}</span></button>`;
-    }).join("");
-    hbLabel.textContent = lang==="All" ? "All items" : lang;
-  }
-
-  function render(){
-    const q=$("search").value.trim().toLowerCase(), sort=$("sort").value;
-    let list=visibleBase().filter(r=>{
-      if(lang!=="All" && (r.language||"Other")!==lang) return false;
-      return !q || (r.name+" "+(r.description||"")).toLowerCase().includes(q);
-    });
-    list.sort(sort==="stars" ? (a,b)=>b.stargazers_count-a.stargazers_count || a.name.localeCompare(b.name)
-            : sort==="name" ? (a,b)=>a.name.localeCompare(b.name)
-            : (a,b)=>new Date(b.pushed_at||0)-new Date(a.pushed_at||0));
-    grid.innerHTML = list.map(r=>`
-      <a class="gui card" href="${esc(r.html_url)}" target="_blank" rel="noopener">
-        <div class="card-head">${itemHTML(r.language)}<span class="card-name">${esc(r.name.replace(/[-_]/g," "))}</span></div>
-        <p class="card-desc${r.description?"":" empty"}">${r.description?esc(r.description):"A mysterious item with no description."}</p>
-        <div class="card-meta">
-          <span>${esc(r.language||"—")}</span>
-          <span>★ ${r.stargazers_count}</span>
-          ${r.pushed_at?`<span>⛏ ${ago(r.pushed_at)}</span>`:""}
-          ${r.fork?`<span class="tag">fork</span>`:""}
-          ${r.homepage?`<span>🌐 live</span>`:""}
-        </div>
-      </a>`).join("");
-    if(!status.dataset.err) status.textContent = list.length ? `${list.length} item${list.length===1?"":"s"} shown` : "Nothing here but air. Try another filter.";
-  }
-
-  function stats(){
-    const orig=repos.filter(r=>!r.fork);
-    const langs=new Set(orig.map(r=>r.language).filter(Boolean));
-    $("stRepos").textContent=repos.length;
-    $("stOrig").textContent=orig.length;
-    $("stStars").textContent=orig.reduce((s,r)=>s+r.stargazers_count,0);
-    $("stLangs").textContent=langs.size;
-    $("xpLevel").textContent=orig.length;
-    $("craftCount").textContent=orig.length;
-    requestAnimationFrame(()=>$("xpFill").style.width=(repos.length?Math.round(orig.length/repos.length*100):0)+"%");
-    splashes.unshift(`Now with ${repos.length} repos!`);
-  }
-
-  hotbar.addEventListener("click",e=>{ const b=e.target.closest(".hb"); if(!b) return; lang=b.dataset.lang; buildHotbar(); render(); });
-  addEventListener("keydown",e=>{
-    if(e.target.matches("input,select,textarea")) return;
-    const n=parseInt(e.key,10); if(!n) return;
-    const b=hotbar.children[n-1]; if(b){ lang=b.dataset.lang; buildHotbar(); render(); }
+/* ================= sky & time ================= */
+const sky = $('#sky'), sc = sky.getContext('2d'), SP = 3;
+let SW = 0, SH = 0, stars = [], clouds = [], hills = [[], []], shoot = null;
+let fast = false, tH = realH(), L = 1, tw = 0;
+function realH() { const d = new Date(); return d.getHours() + d.getMinutes() / 60 + d.getSeconds() / 3600; }
+const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+function updTime(dt) {
+  tH = fast ? (tH + dt * 0.8) % 24 : realH();
+  const elev = Math.sin((tH - 6) / 24 * Math.PI * 2);
+  L = smooth(-0.22, 0.22, elev);
+  tw = clamp(1 - Math.abs(elev) / 0.28, 0, 1);
+}
+const C = {
+  nT:hex('#060a22'), nB:hex('#1b2858'), dT:hex('#3d7fe6'), dB:hex('#a9d6ff'), tT:hex('#3a3577'), tB:hex('#f28c5a'),
+  h0d:hex('#86b9d1'), h0n:hex('#1f2b4a'), h1d:hex('#4f8f5c'), h1n:hex('#15232a'), cd:hex('#ffffff'), cn:hex('#5a6488')
+};
+function resizeSky() {
+  SW = Math.ceil(innerWidth / SP); SH = Math.ceil(innerHeight / SP);
+  sky.width = SW; sky.height = SH;
+  const r = mulberry32(7);
+  stars = Array.from({length: Math.round(SW * SH / 600)}, () => ({x: r() * SW | 0, y: r() * SH * .75 | 0, p: r() * 6.28, b: r() < .15}));
+  hills = [0, 1].map(Lr => {
+    const r2 = mulberry32(11 + Lr), o1 = r2() * 10, o2 = r2() * 10, arr = [];
+    for (let x = 0; x < SW; x += 2) {
+      const h = (Lr ? .18 : .3) * SH + Math.sin(x * (Lr ? .03 : .018) + o1) * SH * (Lr ? .05 : .07) + Math.sin(x * (Lr ? .071 : .043) + o2) * SH * .03;
+      arr.push(Math.round(h / 2) * 2);
+    }
+    return arr;
   });
-  $("search").addEventListener("input",render);
-  $("sort").addEventListener("change",render);
-  $("forks").addEventListener("change",()=>{ buildHotbar(); render(); });
+}
+function mkCloud(r, x) {
+  const w = 18 + r() * 30 | 0, blobs = [];
+  for (let i = 0; i < 5; i++) { const bw = 8 + r() * w * .6 | 0, bh = 4 + r() * 7 | 0; blobs.push([r() * (w - bw) | 0, 8 - bh, bw, bh]); }
+  blobs.push([0, 6, w, 4]);
+  return {x, y: 4 + r() * SH * .35 | 0, w, blobs, v: 1.5 + r() * 3};
+}
+function makeClouds() { const r = mulberry32(99); clouds = Array.from({length: 7}, (_, i) => mkCloud(r, (i / 7) * (SW + 60) - 40 + r() * 20)); }
+function arcPos(p) { return [SW * (.08 + .84 * p) | 0, SH * .72 - Math.sin(clamp(p, 0, 1) * Math.PI) * SH * .58 | 0]; }
 
-  async function load(){
-    try{
-      const all=[];
-      for(let page=1; page<=5; page++){
-        const res=await fetch(`https://api.github.com/users/${USER}/repos?per_page=100&page=${page}&sort=pushed`);
-        if(!res.ok) throw new Error(res.status);
-        const batch=await res.json(); all.push(...batch);
-        if(batch.length<100) break;
+function drawSky(now, dt) {
+  let top = mix(C.nT, C.dT, L), bot = mix(C.nB, C.dB, L);
+  top = mix(top, C.tT, tw * .5); bot = mix(bot, C.tB, tw * .75);
+  const bands = 16;
+  for (let i = 0; i < bands; i++) {
+    const y0 = Math.floor(i * SH / bands), y1 = Math.floor((i + 1) * SH / bands);
+    sc.fillStyle = rgb(mix(top, bot, i / (bands - 1))); sc.fillRect(0, y0, SW, y1 - y0);
+  }
+  const sa = 1 - L;
+  if (sa > .02) {
+    for (const s of stars) {
+      const k = RM ? 1 : .6 + .4 * Math.sin(now / 600 + s.p);
+      sc.fillStyle = `rgba(255,255,240,${sa * k})`; sc.fillRect(s.x, s.y, 1, 1);
+      if (s.b) { sc.fillStyle = `rgba(255,255,240,${sa * k * .45})`; sc.fillRect(s.x - 1, s.y, 3, 1); sc.fillRect(s.x, s.y - 1, 1, 3); }
+    }
+    if (!RM && !shoot && sa > .6 && Math.random() < dt * .08) shoot = {x: SW * (.3 + Math.random() * .7), y: Math.random() * SH * .3, life: 0};
+  }
+  if (shoot) {
+    shoot.life += dt; shoot.x -= 90 * dt; shoot.y += 45 * dt;
+    for (let i = 0; i < 9; i++) { sc.fillStyle = `rgba(255,255,230,${(1 - i / 9) * (1 - shoot.life) * sa})`; sc.fillRect(shoot.x + i * 2 | 0, shoot.y - i | 0, 1, 1); }
+    if (shoot.life > 1) shoot = null;
+  }
+  if (tH >= 5.5 && tH <= 18.5) {
+    const [x, y] = arcPos((tH - 6) / 12);
+    sc.fillStyle = 'rgba(255,240,170,.16)'; sc.fillRect(x - 10, y - 10, 21, 21);
+    sc.fillStyle = 'rgba(255,240,170,.22)'; sc.fillRect(x - 7, y - 7, 15, 15);
+    disc(sc, x, y, 5, '#ffd84a'); disc(sc, x - 1, y - 1, 3, '#fff6c0');
+  }
+  if (tH >= 17.5 || tH <= 6.5) {
+    const [x, y] = arcPos((tH >= 17.5 ? tH - 18 : tH + 6) / 12);
+    sc.fillStyle = 'rgba(200,210,255,.12)'; sc.fillRect(x - 9, y - 9, 19, 19);
+    disc(sc, x, y, 5, '#e9eaf2');
+    sc.fillStyle = '#c5c7d6'; sc.fillRect(x - 2, y - 1, 2, 2); sc.fillRect(x + 1, y + 2, 2, 1); sc.fillRect(x + 2, y - 3, 1, 1);
+  }
+  const cc = mix(mix(C.cn, C.cd, L), C.tB, tw * .35), cs = mix(cc, [0, 0, 0], .18);
+  for (const c of clouds) {
+    if (!RM) c.x += c.v * dt * (fast ? 8 : 1);
+    if (c.x > SW + 10) { c.x = -c.w - 10; c.y = 4 + Math.random() * SH * .35 | 0; }
+    const x = c.x | 0;
+    sc.fillStyle = rgb(cs, .85); for (const b of c.blobs) sc.fillRect(x + b[0], c.y + b[1] + 1, b[2], b[3]);
+    sc.fillStyle = rgb(cc, .92); for (const b of c.blobs) sc.fillRect(x + b[0], c.y + b[1], b[2], b[3]);
+  }
+  [[hills[0], mix(mix(C.h0n, C.h0d, L), C.tB, tw * .15)], [hills[1], mix(C.h1n, C.h1d, L)]].forEach(([arr, col]) => {
+    sc.fillStyle = rgb(col);
+    for (let i = 0; i < arr.length; i++) sc.fillRect(i * 2, SH - arr[i], 2, arr[i]);
+  });
+}
+const fmt = h => { let H = Math.floor(h), M = Math.floor((h % 1) * 60); const ap = H >= 12 ? 'PM' : 'AM'; H = H % 12 || 12; return `${H}:${String(M).padStart(2, '0')} ${ap}`; };
+$('#ff').addEventListener('click', e => {
+  fast = !fast; e.currentTarget.setAttribute('aria-pressed', fast);
+  if (fast) unlock('time');
+});
+
+/* ================= diggable ground ================= */
+const G = $('#ground'), gc = G.getContext('2d'), T = 8, ROWS = 26;
+const AIR = 0, DIRT = 1, GRASS = 2, STONE = 3, COP = 4, IRON = 5, GOLD = 6, GEM = 7, WALL = 9;
+const HARD = {1:.16, 2:.16, 3:.3, 4:.42, 5:.45, 6:.5, 7:.6};
+const ORE_NAME = {4:'Copper Ore', 5:'Iron Ore', 6:'Gold Ore', 7:'Amethyst'};
+const ORE_COL = {4:'#e07b3c', 5:'#d9c7b8', 6:'#f2d24b', 7:'#c86bff'};
+const CRACK = [[3,3],[4,4],[4,3],[3,4],[2,2],[5,5],[5,2],[2,5],[1,1],[6,6],[6,1],[1,6],[2,3],[5,4],[0,0],[7,7]];
+let COLS = 0, world = [], wall = [], surf = [], trees = [], parts = [], gDirty = true, lastW = 0, lastL = -1;
+let hover = null, down = false, mine = {key:null, p:0};
+let mined = store.get('mined', 0);
+$('#mined').textContent = mined;
+
+function genWorld() {
+  COLS = Math.max(40, Math.ceil(G.parentElement.clientWidth / 18));
+  G.width = COLS * T; G.height = ROWS * T;
+  const r = mulberry32(2026), o1 = r() * 9, o2 = r() * 9;
+  world = []; wall = []; surf = []; trees = []; parts = [];
+  for (let x = 0; x < COLS; x++) surf[x] = Math.round(10 + Math.sin(x * .12 + o1) * 2 + Math.sin(x * .045 + o2) * 2.4 + Math.sin(x * .37) * .5);
+  for (let y = 0; y < ROWS; y++) {
+    world[y] = []; wall[y] = [];
+    for (let x = 0; x < COLS; x++) {
+      const d = y - surf[x]; let t = AIR;
+      if (d === 0) t = GRASS;
+      else if (d > 0) {
+        if (d <= 3 + ((x * 7 + 3) % 4 === 0 ? 1 : 0)) t = DIRT;
+        else {
+          t = STONE; const q = r();
+          if (q < .06) t = DIRT; else if (q < .105) t = COP; else if (q < .135 && d > 6) t = IRON;
+          else if (q < .155 && d > 9) t = GOLD; else if (q < .165 && d > 11) t = GEM;
+        }
       }
-      repos=all.filter(r=>r.name.toLowerCase()!==`${USER}.github.io`);
-    }catch(err){
-      repos=FALLBACK;
-      status.dataset.err="1";
-      status.textContent="Couldn't reach GitHub right now, so here are a few saved items. Refresh in a bit for the full inventory.";
+      world[y][x] = t; wall[y][x] = d > 0;
     }
-    stats(); buildHotbar(); render();
   }
-  load();
-  $("yr").textContent=new Date().getFullYear();
+  const caves = Math.max(2, COLS / 30 | 0);
+  for (let k = 0; k < caves; k++) {
+    let x = r() * COLS | 0, y = 15 + r() * (ROWS - 18) | 0;
+    for (let i = 0; i < 45; i++) {
+      for (let dy = -1; dy <= 0; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const xx = x + dx, yy = y + dy;
+        if (xx >= 0 && xx < COLS && yy > surf[xx] + 4 && yy < ROWS - 1) world[yy][xx] = AIR;
+      }
+      x = clamp(x + (r() < .5 ? 1 : -1), 0, COLS - 1);
+      if (r() < .3) y = clamp(y + (r() < .5 ? 1 : -1), 12, ROWS - 2);
+    }
+  }
+  for (let x = 3; x < COLS - 3;) {
+    if (surf[x] >= 9 && r() < .22) { trees.push({x, base: surf[x], h: 4 + (r() * 3 | 0)}); x += 7; } else x++;
+  }
+}
+
+const texCache = {};
+function tex(t, v) {
+  const k = t + '_' + v; if (texCache[k]) return texCache[k];
+  const c = document.createElement('canvas'); c.width = c.height = T;
+  const x = c.getContext('2d'), r = mulberry32(t * 101 + v * 7 + 3);
+  const base = (t === DIRT || t === GRASS) ? ['#976b4b','#7c5537','#ae8160'] : t === WALL ? ['#4a3424','#3b291b','#574030'] : ['#7f7f88','#696972','#9b9ba5'];
+  x.fillStyle = base[0]; x.fillRect(0, 0, T, T);
+  for (let i = 0; i < 12; i++) { x.fillStyle = base[r() < .6 ? 1 : 2]; x.fillRect(r() * T | 0, r() * T | 0, 1, 1); }
+  if (t >= COP && t <= GEM) for (let i = 0; i < 3; i++) {
+    const ox = 1 + (r() * 5 | 0), oy = 1 + (r() * 5 | 0);
+    x.fillStyle = ORE_COL[t]; x.fillRect(ox, oy, 2, 2);
+    x.fillStyle = 'rgba(255,255,255,.55)'; x.fillRect(ox, oy, 1, 1);
+  }
+  if (t === GRASS) {
+    x.fillStyle = '#3fae4f'; x.fillRect(0, 0, T, 2);
+    x.fillStyle = '#2e8f3e'; for (let i = 0; i < T; i++) if (r() < .5) x.fillRect(i, 2, 1, 1);
+    x.fillStyle = '#78d66f'; for (let i = 0; i < T; i++) if (r() < .35) x.fillRect(i, 0, 1, 1);
+  }
+  return texCache[k] = c;
+}
+function drawTree(tr) {
+  const shake = (mine.tg && mine.tg.kind === 'tree' && mine.tg.tree === tr) ? Math.round(Math.sin(performance.now() / 30)) : 0;
+  const bx = tr.x * T + shake, by = tr.base * T, top = by - tr.h * T;
+  gc.fillStyle = '#6e4a2a'; gc.fillRect(bx + 2, top, 4, by - top);
+  gc.fillStyle = '#8a5e36'; gc.fillRect(bx + 2, top, 1, by - top);
+  gc.fillStyle = '#4f331c'; for (let y = top + 3; y < by; y += 5) gc.fillRect(bx + 4, y, 2, 1);
+  gc.fillStyle = '#6e4a2a'; gc.fillRect(bx + 1, by - 2, 1, 2); gc.fillRect(bx + 6, by - 2, 1, 2);
+  disc(gc, bx - 1, top + 12, 3, '#2f8f3a'); disc(gc, bx + 9, top + 18, 3, '#2f8f3a');
+  disc(gc, bx + 4, top - 2, 8, '#1f6b2c'); disc(gc, bx + 4, top - 3, 7, '#2f8f3a'); disc(gc, bx + 2, top - 5, 4, '#4fb54f');
+}
+function target(tx, ty) {
+  if (tx < 0 || ty < 0 || tx >= COLS || ty >= ROWS) return null;
+  if (world[ty][tx] !== AIR) return {kind:'tile', x:tx, y:ty, t:world[ty][tx], key:tx + ',' + ty};
+  for (const tr of trees) if (tr.x === tx && ty < tr.base && ty >= tr.base - tr.h - 2) return {kind:'tree', tree:tr, x:tx, y:ty, key:'tree' + tr.x};
+  return null;
+}
+function outline(x, y, w, h) {
+  gc.fillStyle = 'rgba(255,255,255,.85)';
+  gc.fillRect(x, y, w, 1); gc.fillRect(x, y + h - 1, w, 1); gc.fillRect(x, y, 1, h); gc.fillRect(x + w - 1, y, 1, h);
+}
+function drawGround() {
+  gc.clearRect(0, 0, G.width, G.height);
+  for (const tr of trees) drawTree(tr);
+  for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) {
+    const t = world[y][x], px = x * T, py = y * T;
+    if (t === AIR) { if (wall[y][x]) gc.drawImage(tex(WALL, (x * 3 + y * 5) & 3), px, py); continue; }
+    gc.drawImage(tex(t, (x * 31 + y * 17) & 3), px, py);
+    gc.fillStyle = 'rgba(0,0,0,.35)';
+    if (y > 0 && world[y - 1][x] === AIR && t !== GRASS) gc.fillRect(px, py, T, 1);
+    if (y < ROWS - 1 && world[y + 1][x] === AIR) gc.fillRect(px, py + T - 1, T, 1);
+    if (x > 0 && world[y][x - 1] === AIR) gc.fillRect(px, py, 1, T);
+    if (x < COLS - 1 && world[y][x + 1] === AIR) gc.fillRect(px + T - 1, py, 1, T);
+    if (t === GRASS && (y === 0 || world[y - 1][x] === AIR)) {
+      gc.fillStyle = '#3fae4f';
+      for (let i = 0; i < T; i++) { const h = (x * 13 + i * 7) % 5; if (h > 2) gc.fillRect(px + i, py - (h - 2), 1, h - 2); }
+    }
+  }
+  for (const p of parts) { gc.fillStyle = p.c; gc.fillRect(p.x | 0, p.y | 0, p.s, p.s); }
+  const a = (1 - L) * .5;
+  if (a > .01) {
+    gc.globalCompositeOperation = 'source-atop';
+    gc.fillStyle = `rgba(6,10,40,${a})`; gc.fillRect(0, 0, G.width, G.height);
+    gc.globalCompositeOperation = 'source-over';
+  }
+  if (hover) {
+    const tg = target(hover.x, hover.y);
+    if (tg && tg.kind === 'tile') outline(tg.x * T, tg.y * T, T, T);
+    else if (tg) outline(tg.tree.x * T + 1, (tg.tree.base - tg.tree.h) * T, T - 2, tg.tree.h * T);
+  }
+  if (mine.tg && mine.p > 0) {
+    const n = Math.floor(mine.p / mine.need * CRACK.length);
+    gc.fillStyle = 'rgba(0,0,0,.6)';
+    for (let i = 0; i < n; i++) gc.fillRect(mine.tg.x * T + CRACK[i][0], mine.tg.y * T + CRACK[i][1], 1, 1);
+  }
+}
+function burst(px, py, cols, n = 10) {
+  if (RM) n = 4;
+  for (let i = 0; i < n; i++) parts.push({
+    x: px + Math.random() * T, y: py + Math.random() * T, vx: (Math.random() - .5) * 70, vy: -30 - Math.random() * 60,
+    life: .5 + Math.random() * .4, c: cols[Math.random() * cols.length | 0], s: Math.random() < .3 ? 2 : 1
+  });
+}
+function fellTree(tr) {
+  trees.splice(trees.indexOf(tr), 1);
+  burst(tr.x * T - 4, (tr.base - tr.h) * T - 8, ['#2f8f3a', '#4fb54f', '#1f6b2c', '#6e4a2a'], 22);
+  pickup('Wood', icon('log', '#c8955a', '#a8743f'));
+  unlock('lumber');
+}
+function breakIt(tg) {
+  if (tg.kind === 'tree') { fellTree(tg.tree); return; }
+  const {x, y, t} = tg;
+  world[y][x] = AIR;
+  burst(x * T, y * T, t <= GRASS ? ['#976b4b', '#7c5537', t === GRASS ? '#3fae4f' : '#ae8160'] : ['#7f7f88', '#9b9ba5', ORE_COL[t] || '#696972']);
+  for (const tr of [...trees]) if (tr.x === x && tr.base === y) fellTree(tr);
+  mined++; store.set('mined', mined); $('#mined').textContent = mined;
+  unlock('first'); if (mined >= 50) unlock('dig50');
+  if (ORE_NAME[t]) { pickup(ORE_NAME[t], icon('gem', ORE_COL[t], '#ffffff')); unlock('ore'); if (t === GEM) unlock('gem'); }
+}
+function tileAt(e) {
+  const b = G.getBoundingClientRect();
+  return {x: Math.floor((e.clientX - b.left) / b.width * COLS), y: Math.floor((e.clientY - b.top) / b.height * ROWS)};
+}
+G.addEventListener('pointermove', e => { hover = tileAt(e); gDirty = true; });
+G.addEventListener('pointerdown', e => { down = true; hover = tileAt(e); G.setPointerCapture(e.pointerId); gDirty = true; e.preventDefault(); });
+const stopDig = () => { down = false; mine = {key:null, p:0}; gDirty = true; };
+G.addEventListener('pointerup', stopDig);
+G.addEventListener('pointercancel', stopDig);
+G.addEventListener('pointerleave', () => { if (!down) { hover = null; gDirty = true; } });
+
+function updateGround(dt) {
+  if (down && hover) {
+    const tg = target(hover.x, hover.y);
+    if (tg) {
+      if (mine.key !== tg.key) mine = {key: tg.key, p: 0};
+      mine.tg = tg; mine.need = tg.kind === 'tree' ? .6 : HARD[tg.t]; mine.p += dt;
+      if (mine.p >= mine.need) { breakIt(tg); mine = {key:null, p:0}; }
+      gDirty = true;
+    } else mine = {key:null, p:0};
+  }
+  if (parts.length) {
+    for (const p of parts) { p.vy += 160 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; }
+    parts = parts.filter(p => p.life > 0); gDirty = true;
+  }
+  if (Math.abs(L - lastL) > .01) { lastL = L; gDirty = true; }
+  if (gDirty) { drawGround(); gDirty = false; }
+}
+
+/* ================= boot ================= */
+function resizeAll() {
+  resizeSky();
+  const w = G.parentElement.clientWidth;
+  if (w !== lastW) { lastW = w; genWorld(); gDirty = true; }
+}
+addEventListener('resize', resizeAll);
+resizeAll(); makeClouds(); render(); load();
+
+let last = performance.now(), clockStr = '';
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  updTime(dt); drawSky(now, dt); updateGround(dt);
+  const s = fmt(tH); if (s !== clockStr) { clockStr = s; $('#clock').textContent = s; }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+setTimeout(() => { if (!fast && L < .35) unlock('night'); }, 1500);
 })();
 </script>
 </body>
