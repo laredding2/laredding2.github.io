@@ -269,7 +269,7 @@ const byPushed = (a, b) => pushedMs(b) - pushedMs(a);
 
 /* ================= data ================= */
 const fbRepo = (name, language, description = '') => ({name, language, description, fork:false, html_url:`https://github.com/${USER}/${name}`, stargazers_count:0, forks_count:0, pushed_at:null, topics:[]});
-let user = {login:USER, avatar_url:'https://avatars.githubusercontent.com/u/243619288?v=4', bio:'🎵 I always have a tune floating around in my head', public_repos:76, followers:4, following:19};
+let user = {login:USER, avatar_url:'https://avatars.githubusercontent.com/u/243619288', bio:'🎵 I always have a tune floating around in my head', public_repos:76, followers:4, following:19};
 let repos = [
   fbRepo('Galaxian-AI-Proof-of-Concept', 'Python', 'Proof of Concept by ChatGPT, Gemini, Claude, Grok, and Copilot.'),
   fbRepo('Hex-Color-Generator', 'Python', 'A GUI to get hex codes for colors.'),
