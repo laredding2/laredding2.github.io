@@ -296,7 +296,7 @@ async function load() {
 const state = {lang:'All', q:'', forks:false, sort:'pushed'};
 let hot = [];
 function render() {
-  $('#avatar').src = user.avatar_url + (user.avatar_url.includes('?') ? '&' : '?') + 's=40';
+  $('#avatar').src = user.avatar_url + (user.avatar_url.includes('?') ? '&' : '?') + 's=80';
   $('#name').textContent = user.name || user.login;
   $('#bio').textContent = user.bio || '';
   const stars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
